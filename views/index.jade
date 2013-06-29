@@ -1,0 +1,7 @@
+extends layout
+
+block search
+	form.form-wrapper.cf
+		input(type='text', id='search', placeholder='Search for places...', required='required')
+		input(type='text', style='display: none')
+		button(type='button', id='searchButton', onclick='doSearch()') Search

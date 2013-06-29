@@ -1,0 +1,93 @@
+doctype 5
+html
+	head
+		title= title		
+		link(href='stylesheets/leaflet.css', rel='stylesheet')
+		link(href='stylesheets/style.css', rel='stylesheet')
+	body
+		#map
+		.site-title
+			a(href='/')
+				img(src='images/logo.png')
+		block search
+		#menu
+			ul
+				li
+					| MY ACCOUNT
+				li
+					a(onclick="showModal('blog')")					
+						| BLOG		
+				li
+					a(onclick="showModal('about')")
+						| ABOUT
+		#modalbg(onclick="closeModal()")
+		.modal#blog
+			iframe(src="http://caddisfly.ternup.com/blog", seamless="true")
+		.modal#reports
+		.modal#about
+			h1 
+				| CADDISFLY WATER QUALITY INFORMATION 
+			.pane1
+				img#aboutmap(src="images/map.png")				
+				p
+					| Several million people risk Fluorosis and Arsenic poisoning around the world. The very first step to address this issue is reliable testing.
+
+				p
+					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field. This will enable communities to evolve locally relevant and sustainable systems for better drinking water.
+
+				p
+					| Apart from being a low cost water test kit, Caddisfly is also a service geared towards improving the quality of data in the water sector.				p
+					| Information collected via Caddisfly can help make life-saving decisions for water related issues across communities.
+				p
+					| The testing kits are under development, but do head over to our blog to monitor our progress.
+			.pane2
+				img#bubbles(src="images/bubbles.png")
+				p
+					| Several million people risk Fluorosis and Arsenic poisoning around the world. The very first step to address this issue is reliable testing.
+
+				p
+					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field. This will enable communities to evolve locally relevant and sustainable systems for better drinking water.
+
+				p
+					| Apart from being a low cost water test kit, Caddisfly is also a service geared towards improving the quality of data in the water sector.				p
+					| Information collected via Caddisfly can help make life-saving decisions for water related issues across communities.
+				p
+					| The testing kits are under development, but do head over to our blog to monitor our progress.
+			#clearer
+			#endline
+		#footnote
+			| <a href="http://caddisfly.ternup.com" target="_blank">Caddisfly</a> is a Project of <a href="http://ternup.com" target="_blank">Ternup Research Labs</a>
+		#holder
+			#loading
+				.spinner
+					img(src='images/spinner.gif')
+			.chartplace
+			.chartsubtitle				
+		#legend-content(style='display: none;')
+			.my-legend
+				.legend-title Water Quality Levels
+				.legend-scale
+					ul.legend-labels
+						li
+							span(style='background: #f00;')
+							| Danger
+						li
+							span(style='background: #ff0;')
+							| Re-test
+						li
+							span(style='background: #0f0;')
+							| Safe		
+				script(src='js/vendor/jquery-1.9.1.min.js')
+		script(src='js/main.js')
+
+		script(src='js/vendor/leaflet.js')
+		script(src='js/vendor/leaflet.markercluster.js')
+
+		script(src='js/vendor/moment.min.js' )
+		
+		script(src='js/vendor/d3.v3.min.js')
+		script(src='js/stats.js')
+
+		script(src='js/map.js' )
+
+		script(src='js/search.js' )

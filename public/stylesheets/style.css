@@ -1,0 +1,672 @@
+@font-face {
+    font-family: 'lgreg';
+    src: url('fonts/leaguegothic-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    background: #000;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font: normal 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #FFF;
+    outline: none;
+    padding-left: 3px;
+    padding-right: 3px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    a:link, a:visited {
+        text-decoration: none;
+    }
+
+    a:active, a:hover {
+        color: rgb(82, 178, 216);
+        text-decoration: underline;
+    }
+
+
+header, footer, hgroup,
+nav, section {
+    display: block;
+}
+
+mark {
+    background-color: #a6dbed;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.clear-fix:after {
+    content: ".";
+    clear: both;
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+h1, h2, h3,
+h4, h5, h6 {
+    color: #000;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.75em;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+h4 {
+    font-size: 1.1em;
+}
+
+h5, h6 {
+    font-size: 1em;
+}
+
+    h5 a:link, h5 a:visited, h5 a:active {
+        padding: 0;
+        text-decoration: none;
+    }
+
+
+/* main layout
+----------------------------------------------------------*/
+
+.site-title {
+    padding-top: 7px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+#map {
+    position: absolute;
+    top: 60px;
+    left: 360px;
+    bottom: 0;
+    width: 75%;
+    z-index: -1;
+}
+
+.leaflet-container {
+    font-size: 16px;
+}
+
+.leaflet-popup-content {
+    /*width: 230px !important;*/
+    margin: 10px;
+}
+
+.tiptitle {
+    font-weight: bold;
+    font-size: 18px;
+    color: #555;
+}
+
+.tipsubtitle {
+    font-size: 12px;
+    margin: 0 0 0px 0;
+    color: #666;
+    border-bottom: 1px solid #aaa;
+    padding-bottom: 4px;
+}
+
+.tipdate {
+    font-weight: bold;
+    font-size: 13px;
+    color: #666;
+}
+
+.tiptable {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.tipcell {
+    width: 80px;
+    padding-top: 0px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.red {
+    /* background: rgb(211, 51, 51);*/
+    color: #f00;
+    font-weight: bold;
+}
+
+.my-legend .legend-title {
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 90%;
+}
+
+.my-legend .legend-scale ul {
+    margin: 0;
+    padding: 0;
+    float: left;
+    list-style: none;
+}
+
+    .my-legend .legend-scale ul li {
+        display: block;
+        float: left;
+        width: 50px;
+        margin-bottom: 6px;
+        text-align: center;
+        font-size: 80%;
+        list-style: none;
+    }
+
+.my-legend ul.legend-labels li span {
+    display: block;
+    float: left;
+    height: 15px;
+    width: 50px;
+}
+
+.my-legend .legend-source {
+    font-size: 70%;
+    color: #999;
+    clear: both;
+}
+
+.my-legend a {
+    color: #777;
+}
+
+.cf:before, .cf:after {
+    content: "";
+    display: table;
+}
+
+.cf:after {
+    clear: both;
+}
+
+.cf {
+    zoom: 1;
+}
+
+/* Form wrapper styling */
+.form-wrapper {
+    position: absolute;
+    top: 8px;
+    padding: 1px;
+    box-shadow: 1px 1px 1px rgba(100,100,100,.2) inset, 1px 4px 6px rgba(100,100,100,.2);
+}
+
+    /* Form text input */
+    .form-wrapper input {
+        width: 259px;
+        height: 20px;
+        padding: 10px 5px 10px 16px;
+        float: left;
+        font: normal 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
+        border: 0;
+        background: #eef;
+        color: #222;
+    }
+
+        .form-wrapper input:focus {
+            outline: 0;
+            background: #fff;
+            box-shadow: 0 0 2px rgba(0,0,0,.8) inset;
+        }
+
+        .form-wrapper input::-webkit-input-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .form-wrapper input:-moz-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .form-wrapper input:-ms-input-placeholder {
+            color: #999;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+    /* Form submit button */
+    .form-wrapper button {
+        overflow: visible;
+        position: relative;
+        float: right;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        height: 40px;
+        width: 80px;
+        font: bold 15px/40px 'lucida sans', 'trebuchet MS', 'Tahoma';
+        color: #fff;
+        text-transform: uppercase;
+        background: rgba(52,156,182,.9); /*rgb(255, 245, 0); /*#d83c3c; #A02422*/
+        border-radius: 0 3px 3px 0;
+        text-shadow: 0 -1px 0 rgba(255, 230,0, .3);
+    }
+
+        .form-wrapper button:hover {
+            background: rgba(52,156,182,1); /*#e54040;*/
+        }
+
+        .form-wrapper button:active,
+        .form-wrapper button:focus {
+            background: rgba(52,156,182,1); /*#c42f2f;*/
+            outline: 0;
+        }
+
+        .form-wrapper button:before { /* left arrow */
+            content: '';
+            position: absolute;
+            border-width: 8px 8px 8px 0;
+            border-style: solid solid solid none;
+            border-color: transparent #000 transparent;
+            top: 12px;
+            left: -8px;
+        }
+
+        .form-wrapper button:hover:before {
+            /*border-right-color: #e54040;*/
+        }
+
+        .form-wrapper button:focus:before,
+        .form-wrapper button:active:before {
+            border-right-color: #c42f2f;
+        }
+
+        .form-wrapper button::-moz-focus-inner { /* remove extra button spacing for Mozilla Firefox */
+            border: 0;
+            padding: 0;
+        }
+
+
+.leaflet-left .leaflet-control {
+    margin-left: 20px;
+}
+
+.leaflet-right .leaflet-control {
+}
+
+.leaflet-top .leaflet-control {
+}
+
+
+.map-legends {
+    position: absolute;
+    right: 0px;
+    bottom: 15px;
+    width: 175px;
+}
+
+.results {
+    display: none;
+    position: absolute;
+    left: 20px;
+    top: 57px;
+    width: 253px;
+    background: #eef;
+    min-height: 200px;
+    padding: 15px;
+    box-shadow: 1px 1px 1px rgba(100,100,100,.2) inset, 1px 4px 6px rgba(100,100,100,.2);
+}
+
+    .results li {
+        margin: 0 0 10px 0;
+        color: #555;
+    }
+
+
+.leaflet-control-zoom a {
+    background: #555;
+    color: #fff;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 2px;
+    min-height: 20px;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #999;
+    shape-rendering: crispEdges;
+}
+
+.x.axis path {
+    display: none;
+}
+
+.y.axis path {
+    stroke: #bbb !important;
+}
+
+
+.parameter-list {
+    color: #fff;
+    height: 100%;
+    margin: 30px 0;
+}
+
+    .parameter-list li {
+        margin: 20px 0 0 30px;
+    }
+
+#holder {
+    background: rgba(255,255,255,.9);
+    background: -webkit-gradient(linear, left top, right top, color-stop(10%,rgba(52,156,182,.8)), color-stop(90%,rgba(238,238,255,1)), color-stop(10%,rgba(238,238,255,1)));
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 320px;
+    padding: 10px 20px 20px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    font-size: 10px;
+}
+
+
+.testtype {
+    font-weight: bold;
+    font-size: 16px;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    width: 80px;
+    position: relative;
+    position: relative;
+    left: -42px;
+    top: 55px;
+    color: #fff;
+    text-align: center;
+}
+
+.chartplace {
+    font-size: 27px;
+    padding: 0 0 10px 0;
+    margin: 0 0 0 20px;
+}
+
+.chartsubtitle {
+    margin: -10px 0 0 20px;
+    font-size: 16px;
+}
+
+.leaflet-control-attribution {
+    background-color: #000 !important;
+    color: #ccc;
+}
+
+    .leaflet-control-attribution a {
+        color: #ccc;
+    }
+
+.leaflet-bar {
+    border: 0 !important;
+}
+
+    .leaflet-bar a {
+        background: #888 !important;
+    }
+
+
+        .leaflet-bar a:hover {
+            background: #fff !important;
+        }
+
+.leaflet-control-zoom-in {
+    border-radius: 15px 15px 0 0!important;
+    margin-bottom: 1px;
+}
+
+.leaflet-control-zoom-out {
+    border-radius: 0 0 15px 15px!important;
+}
+
+#footnote {
+    position: absolute;
+    left: 360px;
+    z-index: 100;
+    bottom: 0;
+    color: #ccc;
+    font-size: 11px;
+    font: 11px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+    box-shadow: 0 0 5px #bbb;
+    padding: 0 5px;
+    background: #000;
+}
+
+    #footnote a {
+        color: #ccc;
+    }
+
+#menu {
+    height: 60px;
+    background: rgba(0, 0, 0, 0.33);
+}
+
+
+    #menu ul {
+        position: absolute;
+        right: 150px;
+        color: #fff;
+        font-weight: normal;
+        margin: 20px;
+        font-size: 16px;
+    }
+
+        #menu ul li {
+            float: right;
+            padding: 0 20px;
+        }
+
+.leaflet-container {
+    background: #000;
+}
+
+
+/*modal*/
+
+.modal {
+    display: none;
+    box-sizing: border-box;
+    width: 90%;
+    height: 90%;
+    position: absolute;
+    z-index: 9999;
+    background: #fff;
+    left: 5%;
+    top: 5%;
+    padding: 40px;
+    overflow-y: auto;
+}
+
+#modalbg {
+    display: none;
+    background: #000;
+    opacity: 0.5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+
+#blog {
+    padding: 0;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#about .pane1 {
+    width: 48%;
+    float: left;
+    margin-right: 4%;
+}
+
+#about .pane2 {
+    width: 48%;
+    float: left;
+    clear: right;
+}
+
+#aboutmap {
+    float: left;
+}
+
+#bubbles {
+    float: right;
+}
+
+#about h1 {
+    color: rgb(52,156,182);
+    font-size: 40px;
+    margin: 0 0 20px 0;
+    text-align: center;
+}
+
+#about p {
+    line-height: 27px;
+}
+
+.clearer {
+    clear: both;
+}
+
+#about #endline {
+    clear: left;
+    height: 50px;
+    margin-top: 40px;
+    border-bottom: solid 5px rgb(52,156,182);
+}
+
+#loading {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,.3);
+}
+
+.spinner {
+    opacity: .7;
+    color: #fff;
+    font-size: 20px;
+    position: absolute;
+    top: 70px;
+    bottom: 0;
+    left: 40px;
+    right: 0;
+    text-align: center;
+}
+
+    .spinner img {
+        width: 80px;
+        height: 80px;
+    }
+
+
+/*map cluster*/
+
+.leaflet-cluster-anim .leaflet-marker-icon, .leaflet-cluster-anim .leaflet-marker-shadow {
+    -webkit-transition: -webkit-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -moz-transition: -moz-transform 0.2s ease-out, opacity 0.2s ease-in;
+    -o-transition: -o-transform 0.2s ease-out, opacity 0.2s ease-in;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-in;
+}
+
+.marker-cluster-small {
+    background-color: rgba(181, 226, 140, 0.6);
+}
+
+    .marker-cluster-small div {
+        background-color: rgba(110, 204, 57, 0.6);
+    }
+
+.marker-cluster-medium {
+    background-color: rgba(241, 211, 87, 0.6);
+}
+
+    .marker-cluster-medium div {
+        background-color: rgba(240, 194, 12, 0.6);
+    }
+
+.marker-cluster-large {
+    background-color: rgba(253, 156, 115, 0.6);
+}
+
+    .marker-cluster-large div {
+        background-color: rgba(241, 128, 23, 0.6);
+    }
+
+.marker-cluster {
+    background-clip: padding-box;
+    border-radius: 20px;
+}
+
+    .marker-cluster div {
+        width: 30px;
+        height: 30px;
+        margin-left: 5px;
+        margin-top: 5px;
+        text-align: center;
+        border-radius: 15px;
+        font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
+
+    .marker-cluster span {
+        line-height: 30px;
+    }
