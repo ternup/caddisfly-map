@@ -1,0 +1,45 @@
+﻿<html>
+    <head>
+
+    </head>
+<body>
+    <form method="post" action="/result">
+        <label>deviceId</label>
+        <input id="deviceId" name="deviceId" type="text"><br />
+        <label>test</label>
+        <select name="test">
+            <option value="1">Fluoride</option>
+            <option value="2">Nitrate</option>
+            <option value="3">Turbidity</option>
+            <option value="4">Arsenic</option>
+            <option value="5">E.coli</option>
+        </select><br />
+        <label>value</label>
+        <input name="value" type="text"><br />
+        <label>source</label>
+        <select name="source">
+            <option value="0">Panchayat Borewell</option>
+            <option value="1">Agriculture Borewell</option>
+            <option value="2">Tubewell</option>
+            <option value="3">River / Stream</option>
+            <option value="4">Open Well</option>
+            <option value="5">Domestic Tap</option>
+            <option value="6">Reservoir / Pond / Lake</option>
+            <option value="7">Industrial</option>
+            <option value="8">Other</option>
+        </select><br />
+        <label>place</label>
+        <input name="place" type="text"><br />
+        <label>lon</label>
+        <input name="lon" type="text"><br />
+        <label>lat</label>
+        <input name="lat" type="text"><br />
+
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById('deviceId').value = Math.round(Math.random() * 2343134);
+    </script>
+</body>
+</html>

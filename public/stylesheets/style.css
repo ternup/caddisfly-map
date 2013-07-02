@@ -1,8 +1,26 @@
-@font-face {
+a@font-face {
     font-family: 'lgreg';
     src: url('fonts/leaguegothic-regular-webfont.woff') format('woff');
     font-weight: normal;
     font-style: normal;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    margin: 4px;
+    height: 1px;
+}
+
+::-webkit-scrollbar-track {
+    background: #fff;
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(52,156,182);
+    width: 1px;
+    margin: 0;
+    border-radius: 12px;
 }
 
 html {
@@ -18,6 +36,7 @@ body {
     height: 100%;
     overflow: hidden;
     background: #000;
+    min-width: 380px;
 }
 
 ul {
@@ -51,6 +70,14 @@ a {
 header, footer, hgroup,
 nav, section {
     display: block;
+}
+
+.comingsoon {
+    font-weight: bold;
+    text-align: center;
+    font-size: 25px;
+    text-transform:uppercase;
+    color:#555;
 }
 
 mark {
@@ -118,10 +145,14 @@ h5, h6 {
     top: 5px;
 }
 
+    .site-title img {
+        border: 0;
+    }
+
 #map {
     position: absolute;
     top: 60px;
-    left: 360px;
+    left: 320px;
     bottom: 0;
     width: 75%;
     z-index: -1;
@@ -132,7 +163,6 @@ h5, h6 {
 }
 
 .leaflet-popup-content {
-    /*width: 230px !important;*/
     margin: 10px;
 }
 
@@ -235,14 +265,15 @@ h5, h6 {
     top: 8px;
     padding: 1px;
     box-shadow: 1px 1px 1px rgba(100,100,100,.2) inset, 1px 4px 6px rgba(100,100,100,.2);
+    z-index: 999;
+    min-width: 300px;
 }
 
     /* Form text input */
     .form-wrapper input {
-        width: 259px;
+        width: 257px;
         height: 20px;
         padding: 10px 5px 10px 16px;
-        float: left;
         font: normal 16px 'lucida sans', 'trebuchet MS', 'Tahoma';
         border: 0;
         background: #eef;
@@ -276,7 +307,7 @@ h5, h6 {
     /* Form submit button */
     .form-wrapper button {
         overflow: visible;
-        position: relative;
+        position: absolute;
         float: right;
         border: 0;
         padding: 0;
@@ -399,12 +430,15 @@ h5, h6 {
     }
 
 #holder {
-    background: rgba(255,255,255,.9);
-    background: -webkit-gradient(linear, left top, right top, color-stop(10%,rgba(52,156,182,.8)), color-stop(90%,rgba(238,238,255,1)), color-stop(10%,rgba(238,238,255,1)));
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+    background: rgba(255,255,255,.9) url('../images/bg.png');
+    background-repeat: repeat-y;
     position: absolute;
     left: 0;
     height: 100%;
-    width: 320px;
+    width: 360px;
     padding: 10px 20px 20px 20px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -427,6 +461,16 @@ h5, h6 {
     color: #fff;
     text-align: center;
 }
+
+/*#charttitle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 35px;
+    height: 100%;
+    background: rgb(44,143,168);
+    font-size: 27px;
+}*/
 
 .chartplace {
     font-size: 27px;
@@ -472,7 +516,8 @@ h5, h6 {
 
 #footnote {
     position: absolute;
-    left: 360px;
+    left: 320px;
+    float: right;
     z-index: 100;
     bottom: 0;
     color: #ccc;
@@ -489,7 +534,8 @@ h5, h6 {
 
 #menu {
     height: 60px;
-    background: rgba(0, 0, 0, 0.33);
+    background: rgba(66, 101, 139, 0.53);
+    box-shadow: 0 0 5px #222;
 }
 
 
@@ -500,10 +546,11 @@ h5, h6 {
         font-weight: normal;
         margin: 20px;
         font-size: 16px;
+        float: right;
     }
 
         #menu ul li {
-            float: right;
+            float: left;
             padding: 0 20px;
         }
 
@@ -516,6 +563,7 @@ h5, h6 {
 
 .modal {
     display: none;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     width: 90%;
     height: 90%;
@@ -526,6 +574,7 @@ h5, h6 {
     top: 5%;
     padding: 40px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #modalbg {
@@ -549,31 +598,116 @@ iframe {
     height: 100%;
 }
 
-#about .pane1 {
-    width: 48%;
-    float: left;
-    margin-right: 4%;
+.modalname {
+    font-weight: bold;
+    font-size: 16px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    width: 80px;
+    position: absolute;
+    right: 12px;
+    top: 30px;
+    color: #fff;
+    background: #000;
+    padding: 4px;
+    text-align: center;
 }
 
+#about {
+    font-family: sans-serif;
+}
+
+.modalclosebtn {
+    display: none;
+}
+
+.modal header {
+    margin-top: -25px;
+    padding-bottom: 10px;
+    border-bottom: 5px solid #333;
+    margin-bottom: 30px;
+}
+
+.modal #banner {
+    padding: 20px;
+    width: 100%;
+    height: 50px;
+    left: 0;
+    top: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+#about .pane1 {
+    width: 30%;
+    float: left;
+    margin-right: 5%;
+}
+
+    #about .pane1 img {
+        width: 100%;
+        border: 2px solid rgb(226, 207, 207);
+    }
+
+
 #about .pane2 {
-    width: 48%;
+    width: 30%;
+    float: left;
+    margin-right: 5%;
+}
+
+    #about .pane2 img {
+        width: 100%;
+        border: 2px solid rgb(226, 207, 207);
+    }
+
+
+#about .pane3 {
+    width: 30%;
     float: left;
     clear: right;
 }
 
-#aboutmap {
-    float: left;
+    #about .pane3 img {
+        width: 100%;
+        border: 2px solid rgb(226, 207, 207);
+    }
+
+#about a {
+    color: #1c5ab0;
 }
 
-#bubbles {
-    float: right;
+.pane1, .pane2, .pane3 {
 }
 
-#about h1 {
-    color: rgb(52,156,182);
-    font-size: 40px;
-    margin: 0 0 20px 0;
-    text-align: center;
+    .pane3 > div {
+        border-top: 1px solid #000;
+        text-align: center;
+        padding-top: 15px;
+    }
+
+        .pane3 > div > div {
+            margin-top: 5px;
+        }
+
+#about span {
+    color: #000;
+}
+
+
+.modal h1 {
+    color: #333;
+    font-size: 41px;
+    margin: -10px 0 0 0;
+    text-shadow: 1px 0px 0px #bad3ed;
+}
+
+.modal h2 {
+    color: #333;
+    font-size: 20px;
+    margin: 10px 0 0 0;
 }
 
 #about p {
@@ -584,12 +718,13 @@ iframe {
     clear: both;
 }
 
-#about #endline {
+/*#about #endline {
     clear: left;
-    height: 50px;
-    margin-top: 40px;
+    width:100%;
+    height: 20px;
+    margin-top: 10px;
     border-bottom: solid 5px rgb(52,156,182);
-}
+}*/
 
 #loading {
     display: none;
@@ -670,3 +805,138 @@ iframe {
     .marker-cluster span {
         line-height: 30px;
     }
+
+#mobile-header {
+    display: none;
+}
+
+.modal .close {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+    background: url('../images/closebtn.png') no-repeat center;
+}
+
+
+
+@media only screen and (max-width : 900px) {
+    #accountlink {
+        display: none;
+    }
+
+    #reportslink {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width : 600px) {
+    #holder {
+        width: 320px;
+        height: 170px;
+        bottom: 0;
+    }
+
+    #map {
+        margin: 0;
+        left: 0;
+        top: 30px;
+        width: 100%;
+    }
+
+    .form-wrapper {
+        top: 0;
+        left: 45px;
+        padding: 0;
+    }
+
+        .form-wrapper input {
+            width: 200px;
+        }
+
+    #menu {
+        display: none;
+    }
+
+    .modal {
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+    }
+
+    .modalname {
+        display: none;
+    }
+
+    #mobile-header {
+        display: block;
+        width: 40px;
+        height: 40px;
+    }
+
+    #about .pane1, #about .pane2, #about .pane3 {
+        float: none;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .site-title {
+        display: none;
+    }
+
+    .modal {
+        padding: 20px;
+    }
+
+    #about header {
+        margin-top: -15px;
+        text-align: center;
+    }
+
+    .leaflet-popup-content {
+        margin: 5px 8px;
+    }
+
+    .pane3 > div {
+        padding-bottom: 200px;
+    }
+
+    .chartplace {
+        margin: -10px 0 0 20px;
+    }
+
+    .chartsubtitle {
+        margin: -13px 0 -10px 20px;
+        font-size: 16px;
+    }
+}
+
+
+@media only screen and (max-width : 400px) {
+    #holder {
+        width: 100%;
+    }
+
+    .form-wrapper input {
+        width: 190px;
+    }
+
+    .modalclosebtn {
+        padding-top: 40px;
+        margin-bottom: 50px;
+        display: block;
+        text-align: center;
+    }
+
+        .modalclosebtn button {
+            margin: auto;
+            font-weight: bold;
+            padding: 10px;
+        }
+}

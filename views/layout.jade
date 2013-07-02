@@ -4,59 +4,119 @@ html
 		title= title		
 		link(href='stylesheets/leaflet.css', rel='stylesheet')
 		link(href='stylesheets/style.css', rel='stylesheet')
+		link(href='stylesheets/jquery.sidr.dark.css', rel='stylesheet')
 	body
 		#map
 		.site-title
 			a(href='/')
 				img(src='images/logo.png')
 		block search
+		#mobile-header
+			a#responsive-menu-button(href="#sidr-main")
+				img(src='images/menu.png')
 		#menu
 			ul
 				li
-					| MY ACCOUNT
-				li
-					a(onclick="showModal('blog')")					
-						| BLOG		
-				li
-					a(onclick="showModal('about')")
+					a(onclick="showModal('about');$.sidr('close', 'sidr-main');")
 						| ABOUT
+				li
+					a(onclick="showModal('blog');$.sidr('close', 'sidr-main');")
+						| BLOG		
+				li#reportslink
+					a(onclick="showModal('reports');$.sidr('close', 'sidr-main');")
+						| REPORTS
+				li#accountlink
+					a(onclick="showModal('account');$.sidr('close', 'sidr-main');")
+						| MY ACCOUNT
 		#modalbg(onclick="closeModal()")
-		.modal#blog
+		.modal#account
+			.modalname
+				| ACCOUNT
+			#banner
+			header
+				h1 
+					| CADDISFLY
+				span
+					| WATER&nbsp;QUALITY&nbsp;INFORMATION
+			button.close(onclick="closeModal()")
+			p.comingsoon
+				| Coming Soon
+			div.modalclosebtn
+				button.btn(onclick="closeModal()")
+					| Back to map
+		.modal#blog(style="overflow:hidden")
+			button.close(onclick="closeModal()")
 			iframe(src="http://caddisfly.ternup.com/blog", seamless="true")
+			div.modalclosebtn
+				button.btn(onclick="closeModal()")
+					| Back to map
 		.modal#reports
+			.modalname
+				| REPORTS
+			#banner
+			header
+				h1 
+					| CADDISFLY
+				span
+					| WATER&nbsp;QUALITY&nbsp;INFORMATION
+			button.close(onclick="closeModal()")
+			p.comingsoon
+				| Coming Soon
+			div.modalclosebtn
+				button.btn(onclick="closeModal()")
+					| Back to map
 		.modal#about
-			h1 
-				| CADDISFLY WATER QUALITY INFORMATION 
+			button.close(onclick="closeModal()")
+			.modalname
+				| A B O U T
+			#banner
+			header
+				h1 
+					| CADDISFLY
+				span
+					| WATER&nbsp;QUALITY&nbsp;INFORMATION
 			.pane1
-				img#aboutmap(src="images/map.png")				
+				img#aboutmap(src="images/map.jpg")
+				h2
+					| QUALITY DATA
 				p
-					| Several million people risk Fluorosis and Arsenic poisoning around the world. The very first step to address this issue is reliable testing.
-
+					|  Caddisfly is a service geared towards improving the quality of data in the water sector.
 				p
-					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field. This will enable communities to evolve locally relevant and sustainable systems for better drinking water.
-
-				p
-					| Apart from being a low cost water test kit, Caddisfly is also a service geared towards improving the quality of data in the water sector.				p
-					| Information collected via Caddisfly can help make life-saving decisions for water related issues across communities.
-				p
-					| The testing kits are under development, but do head over to our blog to monitor our progress.
+					| Information gathered helps evolve locally relevant & sustainable systems for better drinking water.
 			.pane2
-				img#bubbles(src="images/bubbles.png")
+				img#bubbles(src="images/tapwater.jpg")
+				h2
+					| WATER SAFETY
 				p
-					| Several million people risk Fluorosis and Arsenic poisoning around the world. The very first step to address this issue is reliable testing.
+					| Several million people risk Fluorosis, Diarrhoea and Arsenic poisoning around the world.
 
 				p
-					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field. This will enable communities to evolve locally relevant and sustainable systems for better drinking water.
-
+					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field.
+			.pane3
+				img#bubbles(src="images/lab.jpg")
+				h2
+					| CADDISFLY RESEARCH
 				p
-					| Apart from being a low cost water test kit, Caddisfly is also a service geared towards improving the quality of data in the water sector.				p
-					| Information collected via Caddisfly can help make life-saving decisions for water related issues across communities.
+					| Research is underway to enable Caddisfly kit to test for Fluoride, Nitrate, Turbidity, Arsenic and E.coli in water.
 				p
-					| The testing kits are under development, but do head over to our blog to monitor our progress.
+					| The testing kits are under development, but do head over to our 
+					a(onclick="showModal('blog');")
+						| blog 
+					| to track our progress.
+				div
+					div(style="font-weight:bold")
+						| TernUp Research Labs
+					div
+						| +91 98452 90855
+					div
+						| info@ternup.com
+					div
+						a(src="http://caddisfly.ternup.com", target="_blank")
+							| http://caddisfly.ternup.com
+					div.modalclosebtn
+						button.btn(onclick="closeModal()")
+							| Back to map
 			#clearer
-			#endline
-		#footnote
-			| <a href="http://caddisfly.ternup.com" target="_blank">Caddisfly</a> is a Project of <a href="http://ternup.com" target="_blank">Ternup Research Labs</a>
 		#holder
 			#loading
 				.spinner
@@ -77,17 +137,17 @@ html
 						li
 							span(style='background: #0f0;')
 							| Safe		
-				script(src='js/vendor/jquery-1.9.1.min.js')
-		script(src='js/main.js')
+		script(src='js/vendor/jquery-1.9.1.min.js')		
 
 		script(src='js/vendor/leaflet.js')
 		script(src='js/vendor/leaflet.markercluster.js')
-
-		script(src='js/vendor/moment.min.js' )
 		
+		script(src='js/map.js' )
 		script(src='js/vendor/d3.v3.min.js')
 		script(src='js/stats.js')
+		script(src='js/vendor/moment.min.js' )
 
-		script(src='js/map.js' )
-
+		script(src='js/vendor/jquery.sidr.min.js')
+		script(src='js/main.js')
 		script(src='js/search.js' )
+	

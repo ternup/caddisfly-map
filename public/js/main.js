@@ -5,6 +5,7 @@ function closeModal() {
 }
 
 function showModal(id) {
+    closeModal();
     $('#modalbg').fadeIn();
     $('#' + id).fadeIn();
 }
@@ -18,7 +19,9 @@ $(document).keyup(function (e) {
 function showModalGraph(id) {
     $('#holder .chart').clone().appendTo('#graph');
     showModal(id);
-
 }
 
-
+$('#responsive-menu-button').sidr({
+    name: 'sidr-main',
+    source: '#menu'
+});

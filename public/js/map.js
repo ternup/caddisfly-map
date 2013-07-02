@@ -1,45 +1,46 @@
 ﻿var map;
+var markerMap = [];
+var mapLoaded;
+var markers;
+var testTypes = ['Fluoride', 'Nitrate', 'Turbidity', 'Arsenic', 'E coli'];
+var boundsChanged;
 
 function resize() {
-    document.getElementById("map").style.width = (document.getElementsByTagName('body')[0].clientWidth - 360) + 'px';
-    document.getElementById("holder").style.height = (window.innerHeight - 90) + 'px';
+    $.sidr('close', 'sidr-main');
+    if (window.innerWidth > 780) {
+        document.getElementById("holder").style.height = (window.innerHeight - 60) + 'px';
+        document.getElementById("map").style.width = (window.innerWidth - 320) + 'px';
+    } else {
+        document.getElementById("holder").style.height = '';
+        document.getElementById("map").style.width = window.innerWidth + 'px';
+    }
 }
 
 $(document).ready(function () {
-
     window.onload = resize;
     window.onresize = resize;
 
-    map = L.map('map', { zoomControl: false, minZoom: 4 });
+    map = L.map('map', { zoomControl: false, minZoom: 3 });
 
     // hard coded - change to map.locate later
-    map.setView([12.3087496, 77.8189627], 9);
+    map.setView([12.0, 77.8189627], 9);
 
     L.tileLayer('http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/999/256/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+        attribution: '<a href="http://caddisfly.ternup.com" target="_blank">Caddisfly</a> by <a href="http://ternup.com" target="_blank">Ternup Labs</a> | Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
         maxZoom: 18
     }).addTo(map);
 
     map.whenReady(function () {
         boundsChanged = setTimeout(function () {
-            requestMarkers(map.getBounds());
-        }, 1000);
+            getMarkers(map.getBounds());
+        }, 2000);
     });
 
     new L.Control.Zoom({ position: 'topright' }).addTo(map);
 
-    var boundsChanged;
+
     map.on('moveend', function (e) {
-
-        if (boundsChanged) {
-            clearTimeout(boundsChanged);
-            boundsChanged = null;
-        }
-
-        boundsChanged = setTimeout(function () {
-            requestMarkers(e.target.getBounds());
-        }, 1000);
-
+        getMarkers(e.target.getBounds());
     });
 
     map.on('movestart', function (e) {
@@ -50,7 +51,18 @@ $(document).ready(function () {
     //map.locate({setView: true});
 });
 
-var testtypes = ['Fluoride', 'Nitrate', 'Turbidity', 'Arsenic', 'E coli'];
+
+function getMarkers(bounds) {
+
+    if (boundsChanged) {
+        clearTimeout(boundsChanged);
+        boundsChanged = null;
+    }
+
+    boundsChanged = setTimeout(function () {
+        requestMarkers(bounds);
+    }, 1000);
+}
 
 Array.prototype.insert = function (index, item) {
     this.splice(index, 0, item);
@@ -85,7 +97,7 @@ function requestHistory(location, place) {
             }
 
             result.forEach(function (d) {
-                createTimeline(d.result, testtypes[d.test - 1]);
+                createTimeline(d.result, testTypes[d.test - 1]);
             });
 
 
@@ -104,9 +116,7 @@ function requestHistory(location, place) {
     });
 }
 
-var markerMap = [];
-var firstMarker, mapLoaded;
-var req = 0;
+var _counter = 0;
 function requestMarkers(bounds) {
 
     $.ajax(
@@ -123,7 +133,7 @@ function requestMarkers(bounds) {
                     if (parseFloat(feature.f) > 1.5) {
                         feature.properties.fresultCss = "red";
                     }
-                    if (parseFloat(feature.n) > 10) {
+                    if (parseFloat(feature.n) > 40) {
                         feature.properties.nresultCss = "red";
                     }
                     if (parseFloat(feature.t) > 6) {
@@ -138,12 +148,14 @@ function requestMarkers(bounds) {
                 });
 
                 var getTag = function (name, value, style) {
-                    if (value) {
-                        return '<tr><td class="tipcell ' + style + '">' + name + '</td><td class="tipcell ' + style + '">' + value + '</td></tr>';
-                    } else {
+                    if (value == null) {
                         return '';
+                    } else {
+                        return '<tr><td class="tipcell ' + style + '">' + name + '</td><td class="tipcell ' + style + '">' + value + '</td></tr>';
                     }
                 }
+
+                var rnd = Math.round(Math.random() * result.length);
 
                 var onEachFeature = function (feature, layer) {
                     var ppm = "<span style='font-weight:normal;color:#555;font-size:11px\'> ppm</span>";
@@ -151,13 +163,13 @@ function requestMarkers(bounds) {
 
                     var popupContent =
                         '<div class="tiptitle">' + feature.ven + '</div>' +
-                        '<div class="tipsubtitle">' + 'Tube well / Hand pump' + '</div>' +
+                        '<div class="tipsubtitle">' + feature.src + '</div>' +
                         '<table class="tiptable" border="0">' +
-                        getTag('Fluoride', feature.f, feature.properties.fresultCss) +
-                        getTag('Nitrate',feature.n, feature.properties.nresultCss) +
-                        getTag('Turbidity', feature.t, feature.properties.tresultCss) +
-                        getTag('Arsenic',feature.a, feature.properties.aresultCss) +
-                        getTag('E. coli',feature.e, feature.properties.eresultCss) +
+                        getTag(testTypes[0], feature.f, feature.properties.fresultCss) +
+                        getTag(testTypes[1], feature.n, feature.properties.nresultCss) +
+                        getTag(testTypes[2], feature.t, feature.properties.tresultCss) +
+                        getTag(testTypes[3], feature.a, feature.properties.aresultCss) +
+                        getTag(testTypes[4], feature.e, feature.properties.eresultCss) +
                         '</table>' +
                         '<div style="font-size:11px;border-top:solid 1px #ccc;margin-top:4px;padding-top:3px;">' + '<span style="font-weight:bold;color:#888">units</span>: ppm (turbidity: ntu)' + '</div>'
 
@@ -171,17 +183,7 @@ function requestMarkers(bounds) {
                     });
                 };
 
-                var markers = L.markerClusterGroup();
-
-                //var geojsonMarkerOptions = {
-                //    radius: 8,
-                //    fillColor: "#ff7800",
-                //    color: "#000",
-                //    weight: 1,
-                //    opacity: 1,
-                //    fillOpacity: 0.8
-                //};
-
+                markers = L.markerClusterGroup({ polygonOptions: { color: 'rgb(35, 78, 35)', width: 2, opacity: 0.7 } });
                 var micon = L.icon({
                     iconUrl: 'images/marker-icon.png',
                     shadowUrl: 'images/marker-shadow.png',
@@ -190,16 +192,14 @@ function requestMarkers(bounds) {
                 var geoJsonLayer = L.geoJson(result, {
                     onEachFeature: onEachFeature,
                     pointToLayer: function (feature, latlng) {
-                        var marker = new L.Marker(latlng, { icon: micon });
-                        if (!mapLoaded && !firstMarker) {
-                            if (feature.ven === 'Maddur') {
-                                firstMarker = marker;
-                                firstMarker.location = feature.loc;
-                                firstMarker.place = feature.ven
-                            }
+                        var marker = new L.Marker(latlng, { icon: micon, title: feature.ven });
+                        if (!mapLoaded && _counter === rnd) {
+                            //if (feature.ven === 'Halgur') {
+                            searchedLocation = feature.loc;
+                            //}
                         }
                         markerMap[feature.loc] = marker;
-                        markerMap[feature.loc].place = feature.ven;
+                        _counter++;
                         return marker;
                     }
                 });
@@ -211,19 +211,26 @@ function requestMarkers(bounds) {
                 console.log(req, status, error);
             },
             complete: function (xhr, status) {
-                if (!mapLoaded) {
-                    if (firstMarker) {
-                        firstMarker.openPopup();
-                        requestHistory(firstMarker.location, firstMarker.place);
-                        map.panTo(firstMarker.getLatLng());
-                    }
-                    mapLoaded = true;
-                }
+                mapLoaded = true;
 
                 if (searchedLocation) {
-                    markerMap[searchedLocation].openPopup();
-                    requestHistory(searchedLocation, markerMap[searchedLocation].place);
-                    searchedLocation = null;
+                    markers.zoomToShowLayer(markerMap[searchedLocation], function () {
+                        markerMap[searchedLocation].openPopup();
+
+                        setTimeout(function () {
+                            if (markerMap[searchedLocation]) {
+                                map.panTo(markerMap[searchedLocation].getLatLng());
+
+                                getMarkers(map.getBounds());
+
+                                searchedLocation = null;
+                            }
+                            searchedLocation = null;
+                        }, 400);
+                    });
+
+                    requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven);
+
                 }
             }
         });

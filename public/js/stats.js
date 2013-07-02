@@ -1,19 +1,14 @@
-﻿var margin = { top: 13, right: 10, bottom: 27, left: 27 },
-    width = 300,
-    height = 70;
+﻿var margin = { top: 13, right: 10, bottom: 27, left: 25 },
+    width,
+    height = 60;
 
 var formatPercent = d3.format(".0%");
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
-
+var x;
+var xAxis
 var y = d3.scale.linear()
     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    //.tickFormat(function (d, i) { return d })
-    .orient("bottom");
 
 //var yAxis = d3.svg.axis()
 //    .scale(y)
@@ -27,6 +22,20 @@ var xAxis = d3.svg.axis()
 
 var createTimeline = function (data, type) {
 
+    if (window.innerWidth > 680) {
+        width = 310;
+    } else {
+        width = 270;
+    }
+
+    x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+    var xAxis = d3.svg.axis()
+    .scale(x)
+    //.tickFormat(function (d, i) { return d })
+    .orient("bottom");
+
     var newData = [];
     var dataIndex = 0;
     for (var i = 0; i < data.length; i++) {
@@ -38,7 +47,7 @@ var createTimeline = function (data, type) {
     var prevYear;
     for (var i = 2003; i < 2014; i++) {
         if (dataIndex > data.length - 1) {
-            newData.push({ year: i, test_result: null });
+            newData.push({ year: i, value: null });
         } else {
             if (prevYear) {
                 while (dataIndex < data.length - 1 && data[dataIndex].year == prevYear) {
@@ -46,11 +55,11 @@ var createTimeline = function (data, type) {
                 }
             }
             if (data[dataIndex].year == i) {
-                newData.push({ year: i, test_result: data[dataIndex].test_result });
+                newData.push({ year: i, value: data[dataIndex].value });
                 dataIndex++;
                 prevYear = i;
             } else {
-                newData.push({ year: i, test_result: null });
+                newData.push({ year: i, value: null });
             }
         }
     }
@@ -68,7 +77,7 @@ var createTimeline = function (data, type) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     x.domain(newData.map(function (d) { return d.year; }));
-    y.domain([0, d3.max(newData, function (d) { return d.test_result; })]);
+    y.domain([0, d3.max(newData, function (d) { return d.value; })]);
 
     var prevTick = ' ';
     var prevYear;
@@ -79,21 +88,21 @@ var createTimeline = function (data, type) {
         .call(xAxis.tickValues(function () {
             var ticks = [];
             newData.forEach(function (d) {
-                if (d.test_result) {
-                    ticks.push(d.year);
+                if (d.value == null) {
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
+                    ticks.push(prevTick);
+                    prevTick = prevTick + ' ';
                 } else {
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
-                    ticks.push(prevTick);
-                    prevTick = prevTick + ' ';
+                    ticks.push(d.year);
                 }
             });
             return ticks;
@@ -118,23 +127,23 @@ var createTimeline = function (data, type) {
         .style('fill', function (d) {
             switch (type) {
                 case "Fluoride":
-                    return d.test_result > 1.5 ? 'rgb(211, 51, 51)' : d.test_result < 1.4 ? 'green' : 'orange';
+                    return d.value > 1.5 ? 'rgb(211, 51, 51)' : d.value < 1 ? 'green' : 'orange';
                 case "Nitrate":
-                    return d.test_result > 10 ? 'rgb(211, 51, 51)' : d.test_result < 8 ? 'green' : 'orange';
+                    return d.value > 45 ? 'rgb(211, 51, 51)' : d.value < 35 ? 'green' : 'orange';
                 case "Turbidity":
-                    return d.test_result > 5 ? 'rgb(211, 51, 51)' : d.test_result < 6 ? 'green' : 'orange';
+                    return d.value > 5 ? 'rgb(211, 51, 51)' : d.value < 6 ? 'green' : 'orange';
                 case "Arsenic":
-                    return d.test_result > 0.05 ? 'rgb(211, 51, 51)' : d.test_result < 0.04 ? 'green' : 'orange';
+                    return d.value > 0.05 ? 'rgb(211, 51, 51)' : d.value < 0.04 ? 'green' : 'orange';
                 case "E coli":
-                    return d.test_result > 1.0 ? 'rgb(211, 51, 51)' : d.test_result < 0.9 ? 'green' : 'orange';
+                    return d.value > 1.0 ? 'rgb(211, 51, 51)' : d.value < 0.9 ? 'green' : 'orange';
                 default:
                     return "";
             }
         })
         .attr("x", function (d) { return x(d.year); })
         .attr("width", x.rangeBand())
-        .attr("y", function (d) { return y(d.test_result); })
-        .attr("height", function (d) { return height - y(d.test_result); });
+        .attr("y", function (d) { return y(d.value); })
+        .attr("height", function (d) { return height - y(d.value); });
 
     svg.selectAll("txt").
           data(newData).
@@ -143,11 +152,11 @@ var createTimeline = function (data, type) {
           attr("x", function (d, i) {
               return x(i) + barWidth;
           }).
-          attr("y", function (d) { return y(d.test_result) - 4; }).
+          attr("y", function (d) { return y(d.value) - 4; }).
           attr("dx", -40).
           attr("text-anchor", "middle").
           text(function (d) {
-              return d.test_result;
+              return d.value;
           }).
           attr("fill", "#000");
 
