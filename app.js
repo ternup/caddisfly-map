@@ -181,9 +181,7 @@ function storeResult(result, res) {
     }
 
 
-
-
-    var source = ['Panchayat Borewell', 'Agriculture Borewell', 'Tubewell', 'River / Stream', 'Open Well', 'Domestic Tap', 'Reservoir / Pond / Lake', 'Industrial', 'Other'];
+    var source = ['Handpump', 'Tubewell', 'River / Stream', 'Open Well', 'Domestic Tap', 'Reservoir / Pond / Lake', 'Industrial', 'Other'];
     var date = new Date();
     pg.connect(connString, function (err, client, done) {
         var sql = "insert into result values (default, $1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8),4326));";
