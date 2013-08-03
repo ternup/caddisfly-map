@@ -836,9 +836,11 @@ iframe {
 
 @media only screen and (max-width : 600px) {
     #holder {
-        width: 320px;
+        display:none;
+        /*width: 320px;
         height: 170px;
         bottom: 0;
+            */
     }
 
     #map {
@@ -920,7 +922,7 @@ iframe {
 
 @media only screen and (max-width : 400px) {
     #holder {
-        width: 100%;
+        display:none;
     }
 
     .form-wrapper input {
