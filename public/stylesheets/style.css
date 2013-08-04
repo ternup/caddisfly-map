@@ -865,7 +865,7 @@ header {
     }
 
         .form-wrapper input {
-            width: 90%;
+            width: 100%;
         }
 
     #menu {
@@ -946,7 +946,7 @@ header {
     }
 
     .form-wrapper input {
-        width: 90%;
+        width: 100%;
     }
 
     .form-wrapper button {
