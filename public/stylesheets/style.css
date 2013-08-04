@@ -555,7 +555,7 @@ h5, h6 {
         }
 
             #menu ul li.active {
-                font-weight:bold;
+                font-weight: bold;
             }
 
 .leaflet-container {
@@ -928,6 +928,14 @@ header {
 
 
 @media only screen and (max-width : 400px) {
+    .leaflet-control-attribution {
+        display: none;
+    }
+
+    #sidr-id-bloglink {
+        display:none;
+    }
+
     #about {
         font-family: sans-serif;
         padding: 0 20px;

@@ -20,7 +20,7 @@ html(style='background:#fff')
 				li(class='active')
 					a(onclick="showModal('about');$.sidr('close', 'sidr-main');")
 						| ABOUT
-				li
+				li#bloglink
 					a(onclick="showModal('blog');$.sidr('close', 'sidr-main');")
 						| BLOG		
 		#about	
@@ -68,7 +68,7 @@ html(style='background:#fff')
 						a(src="http://caddisfly.ternup.com", target="_blank")
 							| http://caddisfly.ternup.com
 					div.modalclosebtn
-						button.btn(onclick="closeModal()")
+						button.btn(onclick="location.href='/'")
 							| Back to map
 			#clearer
 		script(src='js/vendor/jquery-1.9.1.min.js')		
