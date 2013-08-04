@@ -2,8 +2,12 @@
 
 var searchedLocation;
 
-var doSearch = function () {
-    var term = $('#search').val().toLowerCase();
+var doSearch = function (term) {
+    if (!term) {
+        term = $('#search').val();
+    }
+
+    term = term.toLowerCase();
     if (term && term !== '') {
         $.ajax({
             url: '/search',

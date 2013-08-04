@@ -16,6 +16,14 @@ function resize() {
     }
 }
 
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 $(document).ready(function () {
     window.onload = resize;
     window.onresize = resize;
@@ -31,9 +39,15 @@ $(document).ready(function () {
     }).addTo(map);
 
     map.whenReady(function () {
-        boundsChanged = setTimeout(function () {
-            getMarkers(map.getBounds());
-        }, 2000);
+        var searchQuery = getParameterByName('q');
+        if(searchQuery){
+            mapLoaded = true;
+            doSearch(searchQuery);
+        }else{
+            boundsChanged = setTimeout(function () {
+                getMarkers(map.getBounds());
+            }, 2000);
+        }
     });
 
     new L.Control.Zoom({ position: 'topright' }).addTo(map);
@@ -53,7 +67,6 @@ $(document).ready(function () {
 
 
 function getMarkers(bounds) {
-
     if (boundsChanged) {
         clearTimeout(boundsChanged);
         boundsChanged = null;
