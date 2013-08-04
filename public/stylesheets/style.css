@@ -36,7 +36,7 @@ body {
     height: 100%;
     overflow: hidden;
     background: #000;
-    min-width: 380px;
+    min-width: 320px;
 }
 
 ul {
@@ -76,8 +76,8 @@ nav, section {
     font-weight: bold;
     text-align: center;
     font-size: 25px;
-    text-transform:uppercase;
-    color:#555;
+    text-transform: uppercase;
+    color: #555;
 }
 
 mark {
@@ -105,7 +105,7 @@ mark {
 h1, h2, h3,
 h4, h5, h6 {
     color: #000;
-    margin-bottom: 0;
+    margin: 0;
     padding-bottom: 0;
 }
 
@@ -554,6 +554,10 @@ h5, h6 {
             padding: 0 20px;
         }
 
+            #menu ul li.active {
+                font-weight:bold;
+            }
+
 .leaflet-container {
     background: #000;
 }
@@ -617,17 +621,17 @@ iframe {
 
 #about {
     font-family: sans-serif;
+    padding: 0 40px;
 }
 
 .modalclosebtn {
     display: none;
 }
 
-.modal header {
-    margin-top: -25px;
-    padding-bottom: 10px;
-    border-bottom: 5px solid #333;
-    margin-bottom: 30px;
+header {
+    background: #fff;
+    padding-top: 25px;
+    padding-bottom: 30px;
 }
 
 .modal #banner {
@@ -640,28 +644,32 @@ iframe {
     z-index: -1;
 }
 
-#about .pane1 {
+#about {
+    background: #fff;
+}
+
+.pane1 {
     width: 30%;
     float: left;
     margin-right: 5%;
 }
 
-    #about .pane1 img {
-        width: 100%;
-        border: 2px solid rgb(226, 207, 207);
-    }
+#about .pane1 img {
+    width: 100%;
+    border: 2px solid rgb(226, 207, 207);
+}
 
 
-#about .pane2 {
+.pane2 {
     width: 30%;
     float: left;
     margin-right: 5%;
 }
 
-    #about .pane2 img {
-        width: 100%;
-        border: 2px solid rgb(226, 207, 207);
-    }
+#about .pane2 img {
+    width: 100%;
+    border: 2px solid rgb(226, 207, 207);
+}
 
 
 #about .pane3 {
@@ -836,7 +844,7 @@ iframe {
 
 @media only screen and (max-width : 600px) {
     #holder {
-        display:none;
+        display: none;
         /*width: 320px;
         height: 170px;
         bottom: 0;
@@ -897,7 +905,6 @@ iframe {
     }
 
     #about header {
-        margin-top: -15px;
         text-align: center;
     }
 
@@ -921,12 +928,21 @@ iframe {
 
 
 @media only screen and (max-width : 400px) {
+    #about {
+        font-family: sans-serif;
+        padding: 0 20px;
+    }
+
     #holder {
-        display:none;
+        display: none;
     }
 
     .form-wrapper input {
-        width: 190px;
+        width: 100%;
+    }
+
+    .form-wrapper button {
+        display: none;
     }
 
     .modalclosebtn {

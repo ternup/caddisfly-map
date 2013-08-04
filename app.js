@@ -28,6 +28,10 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
+app.get('/about', routes.about);
+app.get('/blog', routes.blog);
+app.get('/reports', routes.reports);
+app.get('/account', routes.account);
 
 var connString = 'tcp://postgres:test@localhost/caddisfly';
 

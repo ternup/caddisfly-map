@@ -1,0 +1,78 @@
+doctype 5
+html(style='background:#fff')
+	head
+		title= title		
+		meta(name='viewport', content='width=device-width')
+		link(href='stylesheets/style.css', rel='stylesheet')
+		link(href='stylesheets/jquery.sidr.dark.css', rel='stylesheet')
+	body
+		.site-title
+			a(href='/')
+				img(src='images/logo.png')
+		#mobile-header
+			a#responsive-menu-button(href="#sidr-main")
+				img(src='images/menu.png')
+		#menu
+			ul
+				li
+					a(onclick="showModal('/');$.sidr('close', 'sidr-main');")
+						| MAP
+				li(class='active')
+					a(onclick="showModal('about');$.sidr('close', 'sidr-main');")
+						| ABOUT
+				li
+					a(onclick="showModal('blog');$.sidr('close', 'sidr-main');")
+						| BLOG		
+		#about	
+			header
+				h1 
+					| CADDISFLY
+				span
+					| WATER&nbsp;QUALITY&nbsp;INFORMATION
+			.pane1
+				img#aboutmap(src="images/map.jpg")
+				h2
+					| QUALITY DATA
+				p
+					|  Caddisfly is a service geared towards improving the quality of data in the water sector.
+				p
+					| Information gathered helps evolve locally relevant & sustainable systems for better drinking water.
+			.pane2
+				img#bubbles(src="images/tapwater.jpg")
+				h2
+					| WATER SAFETY
+				p
+					| Several million people risk Fluorosis, Diarrhoea and Arsenic poisoning around the world.
+
+				p
+					| Caddisfly is a low cost water testing kit that is portable, reasonably accurate, and easy to use on the field.
+			.pane3
+				img#bubbles(src="images/lab.jpg")
+				h2
+					| CADDISFLY RESEARCH
+				p
+					| Research is underway to enable Caddisfly kit to test for Fluoride, Nitrate, Turbidity, Arsenic and E.coli in water.
+				p
+					| The testing kits are under development, but do head over to our 
+					a(onclick="showModal('blog');")
+						| blog 
+					| to track our progress.
+				div
+					div(style="font-weight:bold")
+						| TernUp Research Labs
+					div
+						| +91 98452 90855
+					div
+						| info@ternup.com
+					div
+						a(src="http://caddisfly.ternup.com", target="_blank")
+							| http://caddisfly.ternup.com
+					div.modalclosebtn
+						button.btn(onclick="closeModal()")
+							| Back to map
+			#clearer
+		script(src='js/vendor/jquery-1.9.1.min.js')		
+		script(src='js/vendor/jquery.sidr.min.js')
+		script(src='js/main.js')
+		script(src='js/search.js' )
+	

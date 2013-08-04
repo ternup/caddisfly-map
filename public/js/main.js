@@ -5,9 +5,10 @@ function closeModal() {
 }
 
 function showModal(id) {
-    closeModal();
-    $('#modalbg').fadeIn();
-    $('#' + id).fadeIn();
+    location.href = id;
+    //closeModal();
+    //$('#modalbg').fadeIn();
+    //$('#' + id).fadeIn();
 }
 
 $(document).keyup(function (e) {

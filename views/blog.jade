@@ -1,0 +1,32 @@
+doctype 5
+html(style='background:#fff')
+	head
+		title= title		
+		meta(name='viewport', content='width=device-width')
+		link(href='stylesheets/style.css', rel='stylesheet')
+		link(href='stylesheets/jquery.sidr.dark.css', rel='stylesheet')
+	body
+		.site-title
+			a(href='/')
+				img(src='images/logo.png')
+		#mobile-header
+			a#responsive-menu-button(href="#sidr-main")
+				img(src='images/menu.png')
+		#menu
+			ul
+				li
+					a(onclick="showModal('/');$.sidr('close', 'sidr-main');")
+						| MAP
+				li
+					a(onclick="showModal('about');$.sidr('close', 'sidr-main');")
+						| ABOUT
+				li(class='active')
+					a(onclick="showModal('blog');$.sidr('close', 'sidr-main');")
+						| BLOG		
+		iframe(style="background:#fff", src="http://caddisfly.ternup.com/blog", seamless="true")
+		#clearer
+		script(src='js/vendor/jquery-1.9.1.min.js')		
+		script(src='js/vendor/jquery.sidr.min.js')
+		script(src='js/main.js')
+		script(src='js/search.js' )
+	
