@@ -1,7 +1,7 @@
 extends layout
 
 block search
-	form.form-wrapper.cf
+	form#searchForm.form-wrapper.cf(action="/")
 		input(type='text', id='search', placeholder='Search for places...', required='required')
 		input(type='text', style='display: none')
-		button(type='button', id='searchButton', onclick='doSearch()') Search
+		button(type='submit', id='searchButton') Search

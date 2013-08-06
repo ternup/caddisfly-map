@@ -28,6 +28,13 @@ $(document).ready(function () {
     window.onload = resize;
     window.onresize = resize;
 
+    $("#searchForm").submit(function (event) {
+
+        event.preventDefault();
+        doSearch();
+    });
+
+
     map = L.map('map', { zoomControl: false, minZoom: 3 });
 
     // hard coded - change to map.locate later
@@ -40,10 +47,10 @@ $(document).ready(function () {
 
     map.whenReady(function () {
         var searchQuery = getParameterByName('q');
-        if(searchQuery){
+        if (searchQuery) {
             mapLoaded = true;
             doSearch(searchQuery);
-        }else{
+        } else {
             boundsChanged = setTimeout(function () {
                 getMarkers(map.getBounds());
             }, 2000);
@@ -83,9 +90,11 @@ Array.prototype.insert = function (index, item) {
 
 var historyTimeout;
 function requestHistory(location, place) {
-    historyTimeout = setTimeout(function () {
-        $("#loading").show();
-    }, 300);
+    //historyTimeout = setTimeout(function () {
+    //    $("#loading").show();
+    //}, 300);
+
+    $("#loading").show();
 
     $.ajax(
     {
