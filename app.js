@@ -105,9 +105,9 @@ function retrieveMarkers(bounds, res) {
 	            SELECT 'Feature' As type,ST_AsGeoJSON(ST_Transform(place,4326))::json As geometry, place as loc, \
 			            (select place as ven from result where coordinates = b.place order by date desc limit 1), \
 			            (select source as src from result where coordinates = b.place order by date desc limit 1), \
-			            (select id from result where coordinates = b.place order by date desc limit 1), f, n, t, a , e from \
+			            (select case when hasphoto then id else -1 end as id from result where coordinates = b.place and hasphoto = true order by date desc limit 1), f, n, t, a , e from \
 		        ( \
-			        SELECT * FROM crosstab('select coordinates, test, value from(select distinct on (coordinates, test) case when hasphoto then id else -1 end as id, coordinates, date, source, place, test, value from \
+			        SELECT * FROM crosstab('select coordinates, test, value from(select distinct on (coordinates, test) coordinates, date, source, place, test, value from \
                         result as a where date > now() - interval ''11 year'' and a.coordinates && ST_MakeEnvelope("+ boundary + ", 4326) order by coordinates, test, date desc) as a','select t from generate_series(1,5) t') \
 				        AS result(place geometry, f numeric(10,2), n numeric(10,2), t numeric(10,2), a numeric(10,2), e numeric(10,2)) \
 		        ) as b \
