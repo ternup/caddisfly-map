@@ -7,7 +7,7 @@ var doSearch = function (term) {
         term = $('#search').val();
     }
 
-    term = term.toLowerCase();
+    term = term.trim().toLowerCase();
     if (term && term !== '') {
         $.ajax({
             url: '/search',

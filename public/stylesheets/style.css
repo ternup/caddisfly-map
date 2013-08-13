@@ -23,6 +23,10 @@ a@font-face {
     border-radius: 12px;
 }
 
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 html {
     background: #000;
     margin: 0;
@@ -163,7 +167,11 @@ h5, h6 {
 }
 
 .leaflet-popup-content {
-    margin: 10px;
+    margin: 5px;
+}
+
+.popup-img {
+    width: 200px;
 }
 
 .tiptitle {
@@ -399,7 +407,7 @@ h5, h6 {
 }
 
 .leaflet-popup-content-wrapper {
-    border-radius: 2px;
+    border-radius: 1px;
     min-height: 20px;
 }
 
@@ -851,6 +859,12 @@ header {
             */
     }
 
+    .form-wrapper button {
+        display: none;
+    }
+
+
+
     #map {
         margin: 0;
         left: 0;
@@ -912,6 +926,10 @@ header {
         margin: 5px 8px;
     }
 
+    .popup-img {
+        width: 150px;
+    }
+
     .pane3 > div {
         padding-bottom: 200px;
     }
@@ -933,7 +951,7 @@ header {
     }
 
     #sidr-id-bloglink {
-        display:none;
+        display: none;
     }
 
     #about {
@@ -944,6 +962,15 @@ header {
     #holder {
         display: none;
     }
+
+    .leaflet-popup-content {
+    margin: 2px;
+}
+
+    .popup-img {
+        width: 100px;
+    }
+
 
     .form-wrapper input {
         width: 100%;

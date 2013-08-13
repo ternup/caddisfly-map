@@ -170,21 +170,27 @@ function requestMarkers(bounds) {
                 });
 
                 var getTag = function (name, value, style) {
+                    var ppm = "<span style='font-weight:normal;color:#999;font-size:11px\'> ppm</span>";
+                    var ntu = "<span style='font-weight:normal;color:#999;font-size:11px\'> ntu</span>";
                     if (value == null) {
                         return '';
                     } else {
-                        return '<tr><td class="tipcell ' + style + '">' + name + '</td><td class="tipcell ' + style + '">' + value + '</td></tr>';
+                        return '<tr><td class="tipcell ' + style + '">' + name + '</td><td class="tipcell ' + style + '">' + value + ppm + '</td></tr>';
                     }
                 }
 
                 var rnd = Math.round(Math.random() * result.length);
 
                 var onEachFeature = function (feature, layer) {
-                    var ppm = "<span style='font-weight:normal;color:#555;font-size:11px\'> ppm</span>";
-                    var ntu = "<span style='font-weight:normal;color:#555;font-size:11px\'> ntu</span>";
+                    //onerror="this.style.display = \'none\'"
 
+                    var photo = '<div>';
+                    if (feature.id && feature.id != '-1') {
+                        photo = '<div style="margin:0 0 -5px 0;float:left"><img onclick="location.href=\'images/' + feature.id + '.jpg\'" class="popup-img" src="images/' + feature.id + '.jpg" border="0">';
+                    }
                     var popupContent =
-                        '<div class="tiptitle">' + feature.ven + '</div>' +
+                        photo +
+                        '<div style="width:126px;float:left"><div class="tiptitle">' + feature.ven + '</div>' +
                         '<div class="tipsubtitle">' + feature.src + '</div>' +
                         '<table class="tiptable" border="0">' +
                         getTag(testTypes[0], feature.f, feature.properties.fresultCss) +
@@ -193,11 +199,12 @@ function requestMarkers(bounds) {
                         getTag(testTypes[3], feature.a, feature.properties.aresultCss) +
                         getTag(testTypes[4], feature.e, feature.properties.eresultCss) +
                         '</table>' +
-                        '<div style="font-size:11px;border-top:solid 1px #ccc;margin-top:4px;padding-top:3px;">' + '<span style="font-weight:bold;color:#888">units</span>: ppm (turbidity: ntu)' + '</div>'
+                    //'<div style="font-size:11px;border-top:solid 1px #ccc;margin-top:4px;padding-top:3px;">' + '<span style="font-weight:bold;color:#888">units</span>: ppm (turbidity: ntu)'
+                    '</div></div></div><div style="clear:both"></div>'
 
                     // http://leafletjs.com/reference.html#popup
                     layer.bindPopup(popupContent, {
-                        closeButton: false, offset: new L.Point(11, 5)
+                        maxWidth:340, closeButton: false, offset: new L.Point(11, 5)
                     });
 
                     layer.on('click', function () {

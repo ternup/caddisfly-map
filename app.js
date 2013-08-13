@@ -7,7 +7,7 @@ var express = require('express')
   , path = require('path');
 
 var pg = require('pg');
-
+var fs = require('fs');
 var app = express();
 
 // all environments
@@ -33,7 +33,7 @@ app.get('/blog', routes.blog);
 app.get('/reports', routes.reports);
 app.get('/account', routes.account);
 
-var connString = 'tcp://postgres:test@localhost/caddisfly';
+var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
@@ -44,7 +44,7 @@ app.post('/markers', function (req, res) {
 });
 
 app.post('/result', function (req, res) {
-    storeResult(req.body, res);
+    storeResult(req, res);
 });
 
 app.get('/history', function (req, res) {
@@ -68,7 +68,7 @@ function search(term, res) {
     term = term.toLowerCase();
     pg.connect(connString, function (err, client, done) {
         client.query(sql, [term], function (err, result) {
-            console.log(err, result);
+            if (err) { console.log(err, result); }
             if (result.rows.length > 0) {
                 res.send(result.rows);
                 done();
@@ -102,16 +102,20 @@ function retrieveMarkers(bounds, res) {
            ( \
            SELECT 'FeatureCollection' As type, array_to_json(array_agg(feature)) As features from \
 	        ( \
-	        SELECT 'Feature' As type,ST_AsGeoJSON(ST_Transform(place[1],4326))::json As geometry, place[1] as loc, place[2] as ven, place[3] as src, f, n, t, a , e from \
+	            SELECT 'Feature' As type,ST_AsGeoJSON(ST_Transform(place,4326))::json As geometry, place as loc, \
+			            (select place as ven from result where coordinates = b.place order by date desc limit 1), \
+			            (select source as src from result where coordinates = b.place order by date desc limit 1), \
+			            (select id from result where coordinates = b.place order by date desc limit 1), f, n, t, a , e from \
 		        ( \
-			        SELECT * FROM crosstab('select ARRAY[coordinates::text,place::text,source::text] As place, test, value from(select distinct on (coordinates, test) coordinates, date, source, place, test, value from \
+			        SELECT * FROM crosstab('select coordinates, test, value from(select distinct on (coordinates, test) case when hasphoto then id else -1 end as id, coordinates, date, source, place, test, value from \
                         result as a where date > now() - interval ''11 year'' and a.coordinates && ST_MakeEnvelope("+ boundary + ", 4326) order by coordinates, test, date desc) as a','select t from generate_series(1,5) t') \
-				        AS result(place text[], f numeric(10,2), n numeric(10,2), t numeric(10,2), a numeric(10,2), e numeric(10,2)) \
+				        AS result(place geometry, f numeric(10,2), n numeric(10,2), t numeric(10,2), a numeric(10,2), e numeric(10,2)) \
 		        ) as b \
 	        ) as feature \
            ) as fc"
 
         client.query(sql, function (err, result) {
+            if(err) console.log(err);
             if (result.rows[0].row_to_json.features) {
                 res.send(result.rows[0].row_to_json.features);
             } else {
@@ -154,47 +158,109 @@ function retrieveHistory(location, res) {
 }
 
 
-function storeResult(result, res) {
+function isValidLocation(lat, lon) {
+    if (isNaN(lat) || isNaN(lon)) {
+        return false;
+    }
 
-    console.log(result.deviceId, result.test, result.value, result.source, result.place, result.lon, result.lat);
+    if (lat < -90 || lat > 90) {
+        return false;
+    }
+
+    if (lon < -180 || lon > 180) {
+        return false;
+    }
+
+    return true;
+};
+
+
+function isValidData(result) {
+    if (result.test == 1) {
+        if (result.value < 0 || result.value > 10) {
+            return false;
+        }
+    } else if (result.test == 2) {
+        if (result.value < 0 || result.value > 3000) {
+            return false;
+        }
+    } else if (result.test == 3) {
+        if (result.value < 0 || result.value > 3000) {
+            return false;
+        }
+    } else if (result.test == 4) {
+        if (result.value < 0 || result.value > 100) {
+            return false;
+        }
+    } else if (result.test == 5) {
+        if (result.value < 0 || result.value > 3000) {
+            return false;
+        }
+    }
+
+    if (!isValidLocation(result.lat, result.lon)) {
+        return false;
+    }
+
+    return true;
+}
+
+function storeResult(req, res) {
+
+    result = req.body;
+    //console.log(result.deviceId, result.test, result.value, result.source, result.place, result.lon, result.lat);
     if (!result.deviceId || !result.test || !result.value || !result.source || !result.place || !result.lon || !result.lat) {
         res.send(400, 'Incomplete result data');
         return;
     }
 
-    if (result.test === 1) {
-        if (result.value < 0 || result.value > 10) {
-            res.send(400, 'Incorrect data');
-        }
-    } else if (result.test === 2) {
-        if (result.value < 0 || result.value > 3000) {
-            res.send(400, 'Incorrect data');
-        }
-    } else if (result.test === 3) {
-        if (result.value < 0 || result.value > 3000) {
-            res.send(400, 'Incorrect data');
-        }
-    } else if (result.test === 4) {
-        if (result.value < 0 || result.value > 100) {
-            res.send(400, 'Incorrect data');
-        }
-    } else if (result.test === 5) {
-        if (result.value < 0 || result.value > 3000) {
-            res.send(400, 'Incorrect data');
-        }
+    if (!isValidData(result)) {
+        res.send(400, 'Incorrect data');
+        return;
     }
 
 
+    // get the temporary location of the file
+
+
+    var tmp_path = null;
+    //console.log(req.files.photo.path);
+    if (req.files && req.files.photo && req.files.photo.path) {
+        tmp_path = req.files.photo.path;
+    }
+
     var source = ['Handpump', 'Tubewell', 'River / Stream', 'Open Well', 'Domestic Tap', 'Reservoir / Pond / Lake', 'Industrial', 'Other'];
     var date = new Date();
-    pg.connect(connString, function (err, client, done) {
-        var sql = "insert into result values (default, $1, $2, $3, $4, $5, $6, ST_SetSRID(ST_MakePoint($7, $8),4326));";
 
-        client.query(sql, [result.deviceId, result.test, result.value, date, source[result.source], result.place, result.lon, result.lat], function (err, result) {
+    var accuracy = null;
+    if(!isNaN(result.accuracy)){
+        accuracy = result.accuracy;
+    }
+
+    //console.log(tmp_path);
+    pg.connect(connString, function (err, client, done) {
+        var sql = "insert into result (id, device, test, value, date, source, place, hasphoto, location_accuracy, coordinates) \
+                            values (default, $1, $2, $3, $4, $5, $6, $7, $8, ST_SetSRID(ST_MakePoint($9, $10),4326)) returning id;";
+        
+        client.query(sql, [result.deviceId, result.test, result.value, date, source[result.source], result.place, tmp_path!=null, accuracy, result.lon, result.lat], function (err, result) {
             if (err) {
                 console.log(err);
                 res.send(400, err);
             } else {
+                if (tmp_path) {
+                    var id = result.rows[0].id;
+                    var target_path = './public/images/' + id + ".jpg";
+                    fs.rename(tmp_path, target_path, function (err) {
+                        //if (err) throw err;
+                        // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
+                        fs.unlink(tmp_path, function () {
+                            if (err) console.log(err);
+                            //if (err) throw err;
+                            //console.log('File uploaded to: ' + target_path + ' - ' + req.files.photo.size + ' bytes');
+                            res.send('File uploaded to: ' + target_path + ' - ' + req.files.photo.size + ' bytes');
+                        });
+                    });
+                }
                 res.send(200);
             }
             done();
