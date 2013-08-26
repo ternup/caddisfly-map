@@ -1,8 +1,25 @@
+
+//   This file is part of Caddisfly
+//
+//    Caddisfly is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    Caddisfly is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+
 doctype 5
 html
 	head
 		title= title		
 		meta(name='viewport', content='width=device-width')
+		link(href='http://fonts.googleapis.com/css?family=Ubuntu:400,700', rel='stylesheet')
 		link(href='stylesheets/leaflet.css', rel='stylesheet')
 		link(href='stylesheets/style.css', rel='stylesheet')
 		link(href='stylesheets/jquery.sidr.dark.css', rel='stylesheet')
@@ -47,7 +64,22 @@ html
 				.spinner
 					img(src='images/spinner.gif')
 			.chartplace
-			.chartsubtitle				
+			.select(style='float:left;width:90px;margin: -10px 0 0 20px;')
+				select(onchange='changeTestType(this)')
+					option(selected='true')
+						| All
+					option
+						| Fluoride
+					option
+						| Nitrate
+					option
+						| Turbidity
+					option
+						| Arsenic
+					option
+						| E.coli
+			.chartsubtitle(style='float:left;width:40%')
+			div(style='clear:both')
 		#legend-content(style='display: none;')
 			.my-legend
 				.legend-title Water Quality Levels
@@ -62,11 +94,11 @@ html
 						li
 							span(style='background: #0f0;')
 							| Safe		
-		script(src='js/vendor/jquery-1.10.2.min.js')		
+		script(src='js/vendor/jquery-1.10.2.min.js')
 
 		script(src='js/vendor/leaflet.js')
-		script(src='js/vendor/leaflet.markercluster.js')
-		
+		script(src='js/vendor/leaflet.markercluster-src.js')
+		script(src='js/util.js')
 		script(src='js/map.js' )
 		script(src='js/vendor/d3.v3.min.js')
 		script(src='js/stats.js')

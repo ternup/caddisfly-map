@@ -1,4 +1,21 @@
-﻿var margin = { top: 13, right: 10, bottom: 27, left: 25 },
+﻿/*
+    This file is part of Caddisfly
+
+    Caddisfly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caddisfly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+var margin = { top: 13, right: 10, bottom: 27, left: 25 },
     width,
     height = 60;
 
@@ -18,7 +35,6 @@ var y = d3.scale.linear()
 
 
 //  .tickFormat(formatPercent);
-
 
 var createTimeline = function (data, type) {
 
@@ -64,11 +80,11 @@ var createTimeline = function (data, type) {
         }
     }
 
-    var chartId = 'chart' + type.replace(' ', '-');
+    var chartId = 'chart' + type;
     d3.select("#holder").append("div")
         .attr("class", "chart")
         .attr("id", chartId)
-        .append("div").attr("class", "testtype").text(type);
+        .append("div").attr("class", "testtype").text(testTypes[type -1]);
 
     var svg = d3.select("#" + chartId).append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -125,20 +141,7 @@ var createTimeline = function (data, type) {
       .enter().append("rect")
         .attr("class", "bar")
         .style('fill', function (d) {
-            switch (type) {
-                case "Fluoride":
-                    return d.value > 1.5 ? 'rgb(211, 51, 51)' : d.value < 1 ? 'green' : 'orange';
-                case "Nitrate":
-                    return d.value > 45 ? 'rgb(211, 51, 51)' : d.value < 35 ? 'green' : 'orange';
-                case "Turbidity":
-                    return d.value > 5 ? 'rgb(211, 51, 51)' : d.value < 6 ? 'green' : 'orange';
-                case "Arsenic":
-                    return d.value > 0.05 ? 'rgb(211, 51, 51)' : d.value < 0.04 ? 'green' : 'orange';
-                case "E coli":
-                    return d.value > 1.0 ? 'rgb(211, 51, 51)' : d.value < 0.9 ? 'green' : 'orange';
-                default:
-                    return "";
-            }
+            return getColor(d.value, type);
         })
         .attr("x", function (d) { return x(d.year); })
         .attr("width", x.rangeBand())

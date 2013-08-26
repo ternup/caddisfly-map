@@ -1,4 +1,21 @@
-a@font-face {
+/*
+    This file is part of Caddisfly
+
+    Caddisfly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caddisfly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+@font-face {
     font-family: 'lgreg';
     src: url('fonts/leaguegothic-regular-webfont.woff') format('woff');
     font-weight: normal;
@@ -36,9 +53,8 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font: normal 15px 'lucida sans', 'trebuchet MS', 'Tahoma';
+    font: normal 15px 'Ubuntu', 'sans-serif','lucida sans', 'trebuchet MS', 'Tahoma';
     height: 100%;
-    overflow: hidden;
     background: #000;
     min-width: 300px;
 }
@@ -62,7 +78,6 @@ a {
 }
 
     a:link, a:visited {
-        text-decoration: none;
     }
 
     a:active, a:hover {
@@ -134,8 +149,6 @@ h5, h6 {
 }
 
     h5 a:link, h5 a:visited, h5 a:active {
-        padding: 0;
-        text-decoration: none;
     }
 
 
@@ -172,6 +185,7 @@ h5, h6 {
 
 .popup-img {
     width: 200px;
+    min-height: 162px;
 }
 
 .tiptitle {
@@ -408,7 +422,6 @@ h5, h6 {
 
 .leaflet-popup-content-wrapper {
     border-radius: 1px;
-    min-height: 20px;
 }
 
 .axis path,
@@ -487,7 +500,7 @@ h5, h6 {
 }
 
 .chartsubtitle {
-    margin: -10px 0 0 20px;
+    margin: -8px 0 0 0px;
     font-size: 16px;
 }
 
@@ -628,11 +641,35 @@ iframe {
 }
 
 #about {
-    font-family: sans-serif;
     padding: 0 40px;
 }
 
-.modalclosebtn {
+    #about h2 {
+        margin-top: 25px;
+    }
+
+#contact {
+    text-align: center;
+    font-weight: bold;
+    border-top: solid 1px #000;
+    margin-top: 10px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+    #contact span {
+        margin: 0px;
+        padding: 0px 10px;
+        white-space: nowrap;
+    }
+
+        #contact span + span {
+            border-left: solid black 1px;
+        }
+
+
+
+.backbtn {
     display: none;
 }
 
@@ -784,7 +821,8 @@ header {
 }
 
     .marker-cluster-small div {
-        background-color: rgba(110, 204, 57, 0.6);
+        background-color: rgba(7, 103, 148, 0.6);
+        /*background-color: rgba(110, 204, 57, 0.6);*/
     }
 
 .marker-cluster-medium {
@@ -847,6 +885,15 @@ header {
     #reportslink {
         display: none;
     }
+
+    #contact span {
+        display: block;
+        padding: 5px 10px;
+    }
+
+        #contact span + span {
+            border-left: none;
+        }
 }
 
 
@@ -910,6 +957,11 @@ header {
         margin: 0;
     }
 
+    #contact span + span {
+        border-left: none;
+    }
+
+
     .site-title {
         display: none;
     }
@@ -928,6 +980,7 @@ header {
 
     .popup-img {
         width: 150px;
+        min-height: 102px;
     }
 
     .pane3 > div {
@@ -942,6 +995,19 @@ header {
         margin: -13px 0 -10px 20px;
         font-size: 16px;
     }
+
+    .backbtn {
+        padding-bottom: 40px;
+        margin-bottom: 50px;
+        display: block;
+        text-align: center;
+    }
+
+        .backbtn button {
+            margin: auto;
+            font-weight: bold;
+            padding: 10px;
+        }
 }
 
 
@@ -964,11 +1030,12 @@ header {
     }
 
     .leaflet-popup-content {
-    margin: 2px;
-}
+        margin: 2px;
+    }
 
     .popup-img {
         width: 100px;
+        min-height: 62px;
     }
 
 
@@ -980,14 +1047,14 @@ header {
         display: none;
     }
 
-    .modalclosebtn {
-        padding-top: 40px;
+    .backbtn {
+        padding-bottom: 40px;
         margin-bottom: 50px;
         display: block;
         text-align: center;
     }
 
-        .modalclosebtn button {
+        .backbtn button {
             margin: auto;
             font-weight: bold;
             padding: 10px;

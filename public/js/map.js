@@ -1,4 +1,21 @@
-﻿var map;
+﻿/*
+    This file is part of Caddisfly
+
+    Caddisfly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caddisfly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+var map;
 var markerMap = [];
 var mapLoaded;
 var markers;
@@ -24,18 +41,33 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+var currentTestType = 0;
+
+function changeTestType(sel) {
+    currentTestType = sel.selectedIndex;
+    mapLoaded = false;
+    _counter = 0;
+    d3.selectAll('#holder .chart').remove();
+    $('.chartplace').text("");
+    searchedLocation = currentPopup;
+    getMarkers(map.getBounds());
+}
+
+//function onMapClick(e) {
+//    console.log(e);
+//}
+
 $(document).ready(function () {
     window.onload = resize;
     window.onresize = resize;
 
     $("#searchForm").submit(function (event) {
-
         event.preventDefault();
         doSearch();
     });
 
-
     map = L.map('map', { zoomControl: false, minZoom: 3 });
+    //map.on('click', onMapClick);
 
     // hard coded - change to map.locate later
     map.setView([12.0, 77.8189627], 9);
@@ -53,7 +85,7 @@ $(document).ready(function () {
         } else {
             boundsChanged = setTimeout(function () {
                 getMarkers(map.getBounds());
-            }, 2000);
+            }, 1000);
         }
     });
 
@@ -80,7 +112,7 @@ function getMarkers(bounds) {
     }
 
     boundsChanged = setTimeout(function () {
-        requestMarkers(bounds);
+        requestMarkers(bounds, currentTestType);
     }, 1000);
 }
 
@@ -89,7 +121,7 @@ Array.prototype.insert = function (index, item) {
 };
 
 var historyTimeout;
-function requestHistory(location, place) {
+function requestHistory(location, place, type) {
     //historyTimeout = setTimeout(function () {
     //    $("#loading").show();
     //}, 300);
@@ -101,7 +133,7 @@ function requestHistory(location, place) {
         type: 'GET',
         url: '/history',
         dataType: 'json',
-        data: 'l=' + location,
+        data: 'l=' + location + '&t=' + type,
         contentType: 'application/json; charset=utf-8',
         success: function (result) {
             d3.selectAll('#holder .chart').remove();
@@ -110,21 +142,23 @@ function requestHistory(location, place) {
                 return a.test - b.test;
             });
 
-            for (var i = 0; i < 5; i++) {
-                if (i > result.length - 1) {
-                    result.push({ test: i + 1, result: [] });
-                } else if (result[i].test != i + 1) {
-                    result.insert(i, { test: i + 1, result: [] });
+            if (type < 1) {
+                for (var i = 0; i < 5; i++) {
+                    if (i > result.length - 1) {
+                        result.push({ test: i + 1, result: [] });
+                    } else if (result[i].test != i + 1) {
+                        result.insert(i, { test: i + 1, result: [] });
+                    }
                 }
             }
 
             result.forEach(function (d) {
-                createTimeline(d.result, testTypes[d.test - 1]);
+                createTimeline(d.result, d.test);
             });
 
 
             $('.chartplace').text(place);
-            $('.chartsubtitle').text('Years 2003 - 2013');
+            $('.chartsubtitle').text('2003 - 2013');
 
         },
         error: function (req, status, error) {
@@ -138,15 +172,19 @@ function requestHistory(location, place) {
     });
 }
 
+var currentLayer;
+var currentPopup;
 var _counter = 0;
-function requestMarkers(bounds) {
+var panned = true;
+function requestMarkers(bounds, type) {
 
     $.ajax(
         {
             type: 'POST',
             url: '/markers',
             dataType: 'json',
-            data: JSON.stringify(bounds),
+            //data: { 'bounds': bounds },
+            data: JSON.stringify({ 'type': type, 'bounds': bounds }),
             contentType: 'application/json; charset=utf-8',
             success: function (result) {
                 result.forEach(function (feature) {
@@ -190,7 +228,7 @@ function requestMarkers(bounds) {
                     }
                     var popupContent =
                         photo +
-                        '<div style="width:126px;float:left"><div class="tiptitle">' + feature.ven + '</div>' +
+                        '<div style="width:128px;float:left"><div class="tiptitle">' + feature.ven + '</div>' +
                         '<div class="tipsubtitle">' + feature.src + '</div>' +
                         '<table class="tiptable" border="0">' +
                         getTag(testTypes[0], feature.f, feature.properties.fresultCss) +
@@ -204,15 +242,18 @@ function requestMarkers(bounds) {
 
                     // http://leafletjs.com/reference.html#popup
                     layer.bindPopup(popupContent, {
-                        maxWidth:340, closeButton: false, offset: new L.Point(11, 5)
+                        maxWidth: 340, closeButton: false, offset: new L.Point(type == 0 ? 11 : 0, 5)
                     });
 
-                    layer.on('click', function () {
-                        requestHistory(feature.loc, feature.ven);
+                    layer.on('click', function (e) {
+                        currentPopup = e.target.feature.loc;
+                        requestHistory(feature.loc, feature.ven, type);
                     });
                 };
 
-                markers = L.markerClusterGroup({ polygonOptions: { color: 'rgb(35, 78, 35)', width: 2, opacity: 0.7 } });
+                if (currentTestType == 0) {
+                    markers = L.markerClusterGroup({ polygonOptions: { color: 'rgb(35, 78, 35)', width: 2, opacity: 0.7 } });
+                }
                 var micon = L.icon({
                     iconUrl: 'images/marker-icon.png',
                     shadowUrl: 'images/marker-shadow.png',
@@ -221,7 +262,29 @@ function requestMarkers(bounds) {
                 var geoJsonLayer = L.geoJson(result, {
                     onEachFeature: onEachFeature,
                     pointToLayer: function (feature, latlng) {
-                        var marker = new L.Marker(latlng, { icon: micon, title: feature.ven });
+
+                        var geojsonMarkerOptions = {
+                            title: feature.ven,
+                            radius: 14,
+                            fillColor: getColor(type == 1 ? feature.f : type == 2 ? feature.n : type == 3 ? feature.t : type == 4 ? feature.a : feature.e, type),
+                            color: "#000",
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.9
+                        };
+
+                        if (geojsonMarkerOptions.fillColor == 'green') {
+                            geojsonMarkerOptions.radius = 11;
+                        } else if (geojsonMarkerOptions.fillColor == 'orange') {
+                            geojsonMarkerOptions.radius = 12;
+                        }
+
+                        var marker;
+                        if (type == 0) {
+                            marker = new L.Marker(latlng, { icon: micon, title: feature.ven });
+                        } else {
+                            marker = new L.CircleMarker(latlng, geojsonMarkerOptions);
+                        }
                         if (!mapLoaded && _counter === rnd) {
                             //if (feature.ven === 'Halgur') {
                             searchedLocation = feature.loc;
@@ -232,9 +295,26 @@ function requestMarkers(bounds) {
                         return marker;
                     }
                 });
-                markers.addLayer(geoJsonLayer);
 
-                map.addLayer(markers);
+                if (map.hasLayer(currentLayer)) {
+                    map.removeLayer(currentLayer);
+                }
+
+                if (type == 0) {
+                    markers.addLayer(geoJsonLayer);
+                    currentLayer = markers;
+                    map.addLayer(markers);
+                } else {
+                    map.addLayer(geoJsonLayer);
+                    currentLayer = geoJsonLayer;
+                }
+
+                if (currentPopup) {
+                    requestHistory(currentPopup, markerMap[currentPopup].feature.ven, type);
+                    markerMap[currentPopup].openPopup();
+                }
+
+
             },
             error: function (req, status, error) {
                 console.log(req, status, error);
@@ -243,23 +323,31 @@ function requestMarkers(bounds) {
                 mapLoaded = true;
 
                 if (searchedLocation) {
-                    markers.zoomToShowLayer(markerMap[searchedLocation], function () {
-                        markerMap[searchedLocation].openPopup();
+                    if (markers) {
+                        markers.zoomToShowLayer(markerMap[searchedLocation], function () {
+                            setTimeout(function () {
+                                if (markerMap[searchedLocation]) {
+                                    panned = !panned;
 
-                        setTimeout(function () {
-                            if (markerMap[searchedLocation]) {
-                                map.panTo(markerMap[searchedLocation].getLatLng());
+                                    if (panned) {
+                                        //markerMap[searchedLocation].openPopup();
+                                        currentPopup = searchedLocation;
+                                        searchedLocation = null;
+                                        getMarkers(map.getBounds());
 
-                                getMarkers(map.getBounds());
+                                    } else {
+                                        map.panTo(markerMap[searchedLocation].getLatLng());
+                                        //requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven, type);
+                                    }
 
-                                searchedLocation = null;
-                            }
-                            searchedLocation = null;
-                        }, 400);
-                    });
-
-                    requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven);
-
+                                }
+                            }, 40);
+                        });
+                    } else if (currentPopup) {
+                        markerMap[currentPopup].openPopup();
+                    }
+                } else if (currentPopup) {
+                    markerMap[currentPopup].openPopup();
                 }
             }
         });

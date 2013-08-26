@@ -1,3 +1,20 @@
+/*
+    This file is part of Caddisfly
+
+    Caddisfly is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Caddisfly is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 /**
  * Module dependencies.
  */
@@ -33,7 +50,8 @@ app.get('/blog', routes.blog);
 app.get('/reports', routes.reports);
 app.get('/account', routes.account);
 
-var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
+var connString = 'tcp://postgres:test@localhost/caddisfly';
+//var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
@@ -49,7 +67,7 @@ app.post('/result', function (req, res) {
 
 app.get('/history', function (req, res) {
     //console.log(req.query.l);
-    retrieveHistory(req.query.l, res);
+    retrieveHistory(req.query.l, req.query.t, res);
 });
 
 app.get('/search', function (req, res) {
@@ -85,10 +103,23 @@ function search(term, res) {
 }
 
 // RetrieveCadastre
-function retrieveMarkers(bounds, res) {
+function retrieveMarkers(data, res) {
 
     //console.log(bounds._southWest.lng + ' ' + bounds._southWest.lat + ',' + bounds._northEast.lng + ' ' + bounds._northEast.lat);
+    var type = 1;
 
+    var typeClause = "";
+
+    if (!isNaN(data.type)) {
+        type = Math.floor(data.type);
+        if (type > 5 || type < 1) {
+            typeClause = "";
+        } else {
+            typeClause = " and test = " + type + " ";
+        }
+    }
+
+    var bounds = data.bounds;
     if (isNaN(bounds._southWest.lng)) {
         res.send(400);
         return;
@@ -108,14 +139,14 @@ function retrieveMarkers(bounds, res) {
 			            (select case when hasphoto then id else -1 end as id from result where coordinates = b.place and hasphoto = true order by date desc limit 1), f, n, t, a , e from \
 		        ( \
 			        SELECT * FROM crosstab('select coordinates, test, value from(select distinct on (coordinates, test) coordinates, date, source, place, test, value from \
-                        result as a where date > now() - interval ''11 year'' and a.coordinates && ST_MakeEnvelope("+ boundary + ", 4326) order by coordinates, test, date desc) as a','select t from generate_series(1,5) t') \
+                        result as a where date > now() - interval ''11 year'' " + typeClause + " and a.coordinates && ST_MakeEnvelope(" + boundary + ", 4326) order by coordinates, test, date desc) as a','select t from generate_series(1,5) t') \
 				        AS result(place geometry, f numeric(10,2), n numeric(10,2), t numeric(10,2), a numeric(10,2), e numeric(10,2)) \
 		        ) as b \
 	        ) as feature \
            ) as fc"
 
         client.query(sql, function (err, result) {
-            if(err) console.log(err);
+            if (err) console.log(err);
             if (result.rows[0].row_to_json.features) {
                 res.send(result.rows[0].row_to_json.features);
             } else {
@@ -127,7 +158,18 @@ function retrieveMarkers(bounds, res) {
 }
 
 
-function retrieveHistory(location, res) {
+function retrieveHistory(location, type, res) {
+    var typeClause = "";
+
+    if (!isNaN(type)) {
+        type = Math.floor(type);
+        if (type > 5 || type < 1) {
+            typeClause = "";
+        } else {
+            typeClause = " where test = " + type + " ";
+        }
+    }
+
 
     if (!location) {
         res.send(null);
@@ -142,7 +184,7 @@ function retrieveHistory(location, res) {
 		            select t.test, array_agg(t) as result from result \
  			            inner join ( \
 				            select id, to_char(date_trunc('year', date), 'YYYY') as year, test, value \
- 				            from result as r \
+ 				            from result as r" + typeClause + " \
                             order by year, date desc \
 			            ) t on result.id = t.id \
 			            where coordinates = $1 \
@@ -233,7 +275,7 @@ function storeResult(req, res) {
     var date = new Date();
 
     var accuracy = null;
-    if(!isNaN(result.accuracy)){
+    if (!isNaN(result.accuracy)) {
         accuracy = result.accuracy;
     }
 
@@ -241,8 +283,8 @@ function storeResult(req, res) {
     pg.connect(connString, function (err, client, done) {
         var sql = "insert into result (id, device, test, value, date, source, place, hasphoto, location_accuracy, coordinates) \
                             values (default, $1, $2, $3, $4, $5, $6, $7, $8, ST_SetSRID(ST_MakePoint($9, $10),4326)) returning id;";
-        
-        client.query(sql, [result.deviceId, result.test, result.value, date, source[result.source], result.place, tmp_path!=null, accuracy, result.lon, result.lat], function (err, result) {
+
+        client.query(sql, [result.deviceId, result.test, result.value, date, source[result.source], result.place, tmp_path != null, accuracy, result.lon, result.lat], function (err, result) {
             if (err) {
                 console.log(err);
                 res.send(400, err);

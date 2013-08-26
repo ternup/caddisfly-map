@@ -1,3 +1,20 @@
+
+//   This file is part of Caddisfly
+//
+//    Caddisfly is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    Caddisfly is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with Caddisfly.  If not, see <http://www.gnu.org/licenses/>.
+
+
 doctype 5
 html(style='background:#fff')
 	head
@@ -57,20 +74,20 @@ html(style='background:#fff')
 					a(onclick="showModal('blog');")
 						| blog 
 					| to track our progress.
-				div
-					div(style="font-weight:bold")
-						| TernUp Research Labs
-					div
-						| +91 98452 90855
-					div
-						| info@ternup.com
-					div
-						a(src="http://caddisfly.ternup.com", target="_blank")
-							| http://caddisfly.ternup.com
-					div.modalclosebtn
-						button.btn(onclick="location.href='/'")
-							| Back to map
-			#clearer
+			.clearer
+			#contact
+				span
+					| TernUp&nbsp;Research&nbsp;Labs
+				span
+					| +91&nbsp;98452&nbsp;90855
+				span
+					| info@ternup.com
+				span
+					a(src="http://caddisfly.ternup.com", target="_blank")
+						| http://caddisfly.ternup.com
+			div.backbtn
+				button.btn(onclick="location.href='/'")
+					| Back to map
 		script(src='js/vendor/jquery-1.9.1.min.js')		
 		script(src='js/vendor/jquery.sidr.min.js')
 		script(src='js/main.js')
