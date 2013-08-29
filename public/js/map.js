@@ -353,12 +353,15 @@ function requestMarkers(bounds, type) {
                                     //if (panned) {
                                         markerMap[searchedLocation].openPopup();
                                         currentPopup = searchedLocation;
-                                        searchedLocation = null;
+
                                         getMarkers(map.getBounds());
 
                                     //} else {
                                         setTimeout(function () {
-                                            map.panTo(markerMap[searchedLocation].getLatLng());
+                                            if (markerMap[searchedLocation]) {
+                                                map.panTo(markerMap[searchedLocation].getLatLng());
+                                            }
+                                            searchedLocation = null;
                                         }, 400);
                                         //requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven, type);
                                     //}
