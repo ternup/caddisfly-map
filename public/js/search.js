@@ -26,6 +26,8 @@ var doSearch = function (term) {
 
     term = term.trim().toLowerCase();
     if (term && term !== '') {
+        previousBounds = null;
+        currentPopup = null;
         $.ajax({
             url: '/search',
             type: 'GET',
@@ -40,7 +42,7 @@ var doSearch = function (term) {
                     //map.setZoom(8);
                     setTimeout(function () {
                         if (searchedLocation) {
-                            requestMarkers(map.getBounds());
+                            requestMarkers(map.getBounds(), currentTestType);
                         } else {
                             d3.selectAll('#holder .chart').remove();
                             $('.chartplace').text(data[0].place);

@@ -50,6 +50,7 @@ function changeTestType(sel) {
     d3.selectAll('#holder .chart').remove();
     $('.chartplace').text("");
     searchedLocation = currentPopup;
+    previousBounds = null;
     getMarkers(map.getBounds());
 }
 
@@ -176,7 +177,26 @@ var currentLayer;
 var currentPopup;
 var _counter = 0;
 var panned = true;
+var previousBounds = null;
+
+
+function dataRequestRequired(bounds) {
+
+    if (previousBounds && bounds._southWest.lat >= previousBounds._southWest.lat &&
+        bounds._northEast.lat <= previousBounds._northEast.lat &&
+        bounds._southWest.lng >= previousBounds._southWest.lng &&
+        bounds._northEast.lng <= previousBounds._northEast.lng) {
+        return false;
+    }
+
+    return true;
+}
+
 function requestMarkers(bounds, type) {
+
+    if (!dataRequestRequired(bounds)) {
+        return;
+    }
 
     $.ajax(
         {
@@ -187,6 +207,7 @@ function requestMarkers(bounds, type) {
             data: JSON.stringify({ 'type': type, 'bounds': bounds }),
             contentType: 'application/json; charset=utf-8',
             success: function (result) {
+
                 result.forEach(function (feature) {
                     feature.properties = {};
                     feature.properties["marker-color"] = "#0f0";
@@ -313,7 +334,7 @@ function requestMarkers(bounds, type) {
                     requestHistory(currentPopup, markerMap[currentPopup].feature.ven, type);
                     markerMap[currentPopup].openPopup();
                 }
-
+                previousBounds = bounds;
 
             },
             error: function (req, status, error) {
@@ -329,16 +350,18 @@ function requestMarkers(bounds, type) {
                                 if (markerMap[searchedLocation]) {
                                     panned = !panned;
 
-                                    if (panned) {
-                                        //markerMap[searchedLocation].openPopup();
+                                    //if (panned) {
+                                        markerMap[searchedLocation].openPopup();
                                         currentPopup = searchedLocation;
                                         searchedLocation = null;
                                         getMarkers(map.getBounds());
 
-                                    } else {
-                                        map.panTo(markerMap[searchedLocation].getLatLng());
+                                    //} else {
+                                        setTimeout(function () {
+                                            map.panTo(markerMap[searchedLocation].getLatLng());
+                                        }, 400);
                                         //requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven, type);
-                                    }
+                                    //}
 
                                 }
                             }, 40);

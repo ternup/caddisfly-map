@@ -50,8 +50,8 @@ app.get('/blog', routes.blog);
 app.get('/reports', routes.reports);
 app.get('/account', routes.account);
 
-var connString = 'tcp://postgres:test@localhost/caddisfly';
-//var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
+//var connString = 'tcp://postgres:test@localhost/caddisfly';
+var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
