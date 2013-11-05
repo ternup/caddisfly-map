@@ -1,4 +1,6 @@
-caddisfly-map
+Caddisfly Map
 =============
 
-Online map application for Caddisfly
+Prototype of online map for Caddisfly Water Testing Kit
+
+Currently hosted at http://maps.caddisfly.ternup.com
