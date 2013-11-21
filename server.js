@@ -50,8 +50,8 @@ app.get('/blog', routes.blog);
 app.get('/reports', routes.reports);
 app.get('/account', routes.account);
 
-//var connString = 'tcp://postgres:test@localhost/caddisfly';
-var connString = 'tcp://postgres:50n1c4ppl3@localhost/caddisfly';
+var connString = 'tcp://postgres:test@localhost/caddisfly';
+//var connString = 'postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT';
 
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
@@ -102,7 +102,6 @@ function search(term, res) {
     });
 }
 
-// RetrieveCadastre
 function retrieveMarkers(data, res) {
 
     //console.log(bounds._southWest.lng + ' ' + bounds._southWest.lat + ',' + bounds._northEast.lng + ' ' + bounds._northEast.lat);

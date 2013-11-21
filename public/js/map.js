@@ -176,7 +176,6 @@ function requestHistory(location, place, type) {
 var currentLayer;
 var currentPopup;
 var _counter = 0;
-var panned = true;
 var previousBounds = null;
 
 
@@ -343,29 +342,22 @@ function requestMarkers(bounds, type) {
             complete: function (xhr, status) {
                 mapLoaded = true;
 
+
                 if (searchedLocation) {
                     if (markers) {
                         markers.zoomToShowLayer(markerMap[searchedLocation], function () {
                             setTimeout(function () {
                                 if (markerMap[searchedLocation]) {
-                                    panned = !panned;
+                                    markerMap[searchedLocation].openPopup();
+                                    currentPopup = searchedLocation;
 
-                                    //if (panned) {
-                                        markerMap[searchedLocation].openPopup();
-                                        currentPopup = searchedLocation;
+                                    getMarkers(map.getBounds());
+                                    if (markerMap[searchedLocation]) {
+                                        map.panTo(markerMap[searchedLocation].getLatLng());
+                                        searchedLocation = null;
+                                    }
 
-                                        getMarkers(map.getBounds());
-
-                                    //} else {
-                                        setTimeout(function () {
-                                            if (markerMap[searchedLocation]) {
-                                                map.panTo(markerMap[searchedLocation].getLatLng());
-                                            }
-                                            searchedLocation = null;
-                                        }, 400);
-                                        //requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven, type);
-                                    //}
-
+                                    //requestHistory(searchedLocation, markerMap[searchedLocation].feature.ven, type);
                                 }
                             }, 40);
                         });
